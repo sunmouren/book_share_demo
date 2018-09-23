@@ -1,0 +1,99 @@
+{% load staticfiles %}
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+{#    <link rel="icon" href="../../../../favicon.ico">#}
+
+    <title>图书分享</title>
+
+    <!-- Bootstrap core CSS -->
+{#    <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">#}
+      <link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+    <!-- Custom styles for this template -->
+    <link href="{% static 'css/offcanvas.css' %}" rel="stylesheet">
+  </head>
+
+  <body class="bg-light">
+
+    <nav class="navbar navbar-expand-md fixed-top navbar-dark bg-dark">
+      <div class="container">
+          <a class="navbar-brand" href="{% url 'index' %}">在线图书分享</a>
+          <button class="navbar-toggler p-0 border-0" type="button" data-toggle="offcanvas">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+
+          <div class="navbar-collapse  offcanvas-collapse" id="navbarsExampleDefault">
+            <ul class="navbar-nav mr-auto">
+              <li class="nav-item {% ifequal current_page '' %}active{% endifequal %}">
+                <a class="nav-link " href="{% url 'index' %}">首页</a></li>
+              <li class="nav-item {% ifequal current_page 'book_list' %}active{% endifequal %}" >
+                <a class="nav-link" href="{% url 'books:book_list' %}">图书</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="#">关注</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="#">书友</a>
+              </li>
+              <li class="nav-item dropdown float-right">
+                <a class="nav-link dropdown-toggle" href="http://example.com" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">设置</a>
+                <div class="dropdown-menu" aria-labelledby="dropdown01">
+                  <a class="dropdown-item" href="#">个人主页</a>
+                  <a class="dropdown-item" href="#">注销</a>
+                  <a class="dropdown-item" href="#">Something else here</a>
+                </div>
+              </li>
+            </ul>
+            <form class="form-inline my-2 my-lg-0">
+              <input class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search">
+              <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+            </form>
+          </div>
+      </div>
+    </nav>
+
+{#    <div class="nav-scroller bg-white box-shadow">#}
+{#      <nav class="nav nav-underline container" >#}
+{#        <a class="nav-link active" href="#">发现</a>#}
+{#        <a class="nav-link" href="#">#}
+{#            图书#}
+{#        </a>#}
+{#        <a class="nav-link" href="#">#}
+{#            关注#}
+{#            <span class="badge badge-pill bg-light align-text-bottom">27</span>#}
+{#        </a>#}
+{#        <a class="nav-link" href="#">书友</a>#}
+{#        <a class="nav-link" href="#">Link</a>#}
+{#        <a class="nav-link" href="#">Link</a>#}
+{#        <a class="nav-link" href="#">Link</a>#}
+{#        <a class="nav-link" href="#">Link</a>#}
+{#        <a class="nav-link" href="#">Link</a>#}
+{#      </nav>#}
+{#    </div>#}
+
+    <main role="main">
+      {% block main %}
+      
+      {% endblock %}
+    </main>
+
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+{#    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>#}
+{#    <script>window.jQuery || document.write('<script src="{% static 'js/jquery-slim.min.js' %}"><\/script>')</script>#}
+{#    <script src="{% static 'js/popper.min.js' %}"></script>#}
+{#    <script src="{% static 'js/bootstrap.min.js' %}"></script>#}
+    <script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdn.bootcss.com/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://cdn.bootcss.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    <script src="{% static 'js/holder.min.js' %}"></script>
+    <script src="{% static 'js/offcanvas.js' %}"></script>
+  </body>
+</html>
