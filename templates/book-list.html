@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load staticfiles %}
 
 {% block main %}
     <div class="bg-light">
@@ -32,16 +33,22 @@
                         <img class="card-img-top img-fluid img-thumbnail" src="{{ book.cover_picture.url }}" style="height: 225px;" alt="Card image cap">
                           <div class="card-body">
                               <h5 class="card-title"><a href="#">{{ book.name }}</a></h5>
-{#                              <p class="card-text" data-toggle="collapse" data-target="#desc">展开简介</p>#}
-{#                              <p id="desc" class="card-text collapse">#}
-{#                                 {{ book.desc }}#}
-{#                              </p>#}
                               <div class="d-flex justify-content-between align-items-center">
                                   <div class="btn-group">
-                                      <button type="button" class="btn btn-sm btn-outline-secondary">写书评</button>
+                                      <button type="button" class="btn btn-sm btn-outline-secondary"
+                                      data-toggle="collapse" data-target="#CommentForm{{ book.id }}" aria-expanded="false" aria-controls="CommentForm{{ book.id }}">写书评</button>
                                       <button type="button" class="btn btn-sm btn-outline-secondary">下载</button>
                                   </div>
                                 <small class="text-muted">{{ book.created|timesince }}前</small>
+                              </div>
+                              <div class="collapse" id="CommentForm{{ book.id }}" style="margin-top: 8px">
+                                     <form>
+                                        <div class="form-group">
+                                          <textarea class="form-control" id="message-text-{{ book.id }}"></textarea>
+                                        </div>
+                                      </form>
+                                  <button type="button" class="btn btn-sm btn-outline-secondary" data-dismiss="collapse" onclick="cancelComment({{ book.id }})">取 消</button>
+                                  <button type="button" class="btn btn-sm btn-success float-right" onclick="submitComment({{ book.id }}, 0)">发 送</button>
                               </div>
                           </div>
                       </div>

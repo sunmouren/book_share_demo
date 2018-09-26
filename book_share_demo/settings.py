@@ -40,8 +40,10 @@ INSTALLED_APPS = [
     # my app
     'users',
     'books',
+    'comments',
     # third app
     'imagekit',
+    'mptt',
 ]
 
 MIDDLEWARE = [
