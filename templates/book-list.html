@@ -29,8 +29,8 @@
             <div class="row" style="margin-top: 16px">
                 {% for book in books %}
                     <div class="col-md-4">
-                      <div class="card  mb-4 box-shadow">
-                        <img class="card-img-top img-fluid img-thumbnail" src="{{ book.cover_picture.url }}" style="height: 225px;" alt="Card image cap">
+                      <div class="card mb-4 box-shadow">
+                        <img class="card-img-top img-fluid flex-auto d-none d-md-block img-thumbnail" src="{{ book.cover_picture.url }}" style="height: 225px;" alt="Card image cap">
                           <div class="card-body">
                               <h5 class="card-title"><a href="#">{{ book.name }}</a></h5>
                               <div class="d-flex justify-content-between align-items-center">

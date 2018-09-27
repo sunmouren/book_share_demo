@@ -4,21 +4,21 @@
     <div class="container">
        <div class="my-3 p-3 bg-white rounded box-shadow">
             <div class="media text-muted pt-3">
-              <img data-src="holder.js/32x32?theme=thumb&bg=007bff&fg=007bff&size=1" alt="" class="mr-2 rounded">
+              <img src="{{ user.avatar.url }}" alt="" class="mr-2 rounded" style="width: 32px; height: 32px">
               <div class="media-body pb-3 mb-0 small lh-125">
                 <div class="d-flex justify-content-between align-items-center w-100">
                   <strong class="text-gray-dark">{{ user }}</strong>
                   <a href="#">Follow</a>
                 </div>
-                <span class="d-block">@username</span>
+                <span class="d-block">{{ user.signature }}</span>
               </div>
             </div>
 
         </div>
         <div class="nav-scroller bg-white box-shadow">
             <nav class="nav nav-underline container" >
-               <a class="nav-link" href="#">图书</a>
-               <a class="nav-link active text-success" href="#">评论</a>
+               <a class="nav-link {% ifequal 'books' data %}active text-success{% endifequal %}" href="?data=books">图书</a>
+               <a class="nav-link {% ifequal 'comments' data %}active text-success{% endifequal %}" href="?data=comments">评论</a>
                <a class="nav-link" href="#">历史</a>
                <a class="nav-link" href="#">传记</a>
                <a class="nav-link" href="#">Link</a>
@@ -26,33 +26,94 @@
             </nav>
         </div>
 
-         <div class="my-3 p-3 bg-white rounded box-shadow">
-            <div class="media text-muted pt-3">
-              <img data-src="holder.js/32x32?theme=thumb&bg=007bff&fg=007bff&size=1" alt="" class="mr-2 rounded">
-              <p class="media-body pb-3 mb-0 small lh-125 border-bottom border-gray">
-                <strong class="d-block text-gray-dark">@username</strong>
-                Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus.
-              </p>
-            </div>
-            <div class="media text-muted pt-3">
-              <img data-src="holder.js/32x32?theme=thumb&bg=e83e8c&fg=e83e8c&size=1" alt="" class="mr-2 rounded">
-              <p class="media-body pb-3 mb-0 small lh-125 border-bottom border-gray">
-                <strong class="d-block text-gray-dark">@username</strong>
-                Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus.
-              </p>
-            </div>
+        <!-- user books data-->
+        {% ifequal 'books' data %}
+            <div class="my-3 p-3 bg-white rounded box-shadow">
+                <h6 class="border-bottom border-gray pb-2 mb-3">{{ is_owner }}的图书</h6>
+                <div class="row mb-2">
+                {% for book in books %}
+                    <div class="col-md-4">
+                      <div class="card mb-4 box-shadow ">
+                        <img class="card-img-top img-fluid flex-auto d-none d-md-block img-thumbnail" src="{{ book.cover_picture.url }}" style="height: 225px;" alt="Card image cap">
+                          <div class="card-body">
+                              <h5 class="card-title"><a href="#">{{ book.name }}</a></h5>
+                              <div class="d-flex justify-content-between align-items-center">
+                                  <div class="btn-group">
+                                      <button type="button" class="btn btn-sm btn-outline-secondary"
+                                              data-toggle="collapse" data-target="#CommentForm{{ book.id }}" aria-expanded="false"
+                                              aria-controls="CommentForm{{ book.id }}">写书评</button>
+                                      <button type="button" class="btn btn-sm btn-outline-secondary">下载</button>
+                                      {% ifequal request.user user %}
+                                           <button type="button" class="btn btn-sm btn-outline-secondary">编辑</button>
+                                      {% endifequal %}
+                                  </div>
+                                <small class="text-muted">{{ book.created|date:'Y-m-d' }}</small>
+                              </div>
+                              <div class="collapse" id="CommentForm{{ book.id }}" style="margin-top: 8px">
+                                     <form>
+                                        <div class="form-group">
+                                          <textarea class="form-control" id="message-text-{{ book.id }}"></textarea>
+                                        </div>
+                                     </form>
+                                  <button type="button" class="btn btn-sm btn-outline-secondary" data-dismiss="collapse" onclick="cancelComment({{ book.id }})">取 消</button>
+                                  <button type="button" class="btn btn-sm btn-success float-right" onclick="submitComment({{ book.id }}, 0)">发 送</button>
+                              </div>
+                          </div>
+                      </div>
+                    </div>
+                {% endfor %}
 
-            <div class="media text-muted pt-3">
-              <img data-src="holder.js/32x32?theme=thumb&bg=6f42c1&fg=6f42c1&size=1" alt="" class="mr-2 rounded">
-              <p class="media-body pb-3 mb-0 small lh-125 border-bottom border-gray">
-                <strong class="d-block text-gray-dark">@username</strong>
-                Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus.
-              </p>
+                {% for fake_book in fake_books %}
+                    <div class="col-md-4">
+                      <div class="card mb-4 box-shadow">
+                        <img class="card-img-top" data-src="holder.js/100px225?theme=thumb&bg=55595c&fg=eceeef&text=Thumbnail" alt="Card image cap">
+                        <div class="card-body">
+                            <h5 class="card-title"><a href="#">book-name-{{ fake_book }}</a></h5>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div class="btn-group">
+                                    <button type="button" class="btn btn-sm btn-outline-secondary">写书评</button>
+                                    <button type="button" class="btn btn-sm btn-outline-secondary">下载</button>
+                                </div>
+                                <small class="text-muted">{{ fake_book }} 分钟前</small>
+                            </div>
+                        </div>
+                      </div>
+                    </div>
+                {% endfor %}
             </div>
+        </div>
+        {% endifequal %}
 
-            <small class="d-block text-right mt-3">
-              <a href="#">全部书评</a>
-            </small>
-      </div>
+        <!-- user comments data-->
+        {% ifequal 'comments' data %}
+             <div class="my-3 p-3 bg-white rounded box-shadow">
+                 <h6 class="border-bottom border-gray pb-2 mb-0">{{ is_owner }}的评论</h6>
+                <div class="media text-muted pt-3">
+                  <img data-src="holder.js/32x32?theme=thumb&bg=007bff&fg=007bff&size=1" alt="" class="mr-2 rounded">
+                  <p class="media-body pb-3 mb-0 small lh-125 border-bottom border-gray">
+                    <strong class="d-block text-gray-dark">@username</strong>
+                    Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus.
+                  </p>
+                </div>
+                <div class="media text-muted pt-3">
+                  <img data-src="holder.js/32x32?theme=thumb&bg=e83e8c&fg=e83e8c&size=1" alt="" class="mr-2 rounded">
+                  <p class="media-body pb-3 mb-0 small lh-125 border-bottom border-gray">
+                    <strong class="d-block text-gray-dark">@username</strong>
+                    Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus.
+                  </p>
+                </div>
+
+                <div class="media text-muted pt-3">
+                  <img data-src="holder.js/32x32?theme=thumb&bg=6f42c1&fg=6f42c1&size=1" alt="" class="mr-2 rounded">
+                  <p class="media-body pb-3 mb-0 small lh-125 border-bottom border-gray">
+                    <strong class="d-block text-gray-dark">@username</strong>
+                    Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus.
+                  </p>
+                </div>
+
+            </div>
+        {% endifequal %}
+
+
     </div>
 {% endblock %}
