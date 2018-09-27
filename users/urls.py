@@ -12,5 +12,5 @@ from .views import UserProfileView
 app_name = 'users'
 
 urlpatterns = [
-    path('profile/<int:user_id>/', UserProfileView.as_view(), name='user_profile'),
+    # path('profile/<int:user_id>/', UserProfileView.as_view(), name='user_profile'),
 ]
