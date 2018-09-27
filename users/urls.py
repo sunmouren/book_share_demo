@@ -6,10 +6,11 @@
 @desc: 
 """
 from django.urls import path
+from .views import UserProfileView
 
 
 app_name = 'users'
 
 urlpatterns = [
-
+    path('profile/<int:user_id>/', UserProfileView.as_view(), name='user_profile'),
 ]
