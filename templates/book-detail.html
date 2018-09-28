@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+
+
+{% block main %}
+    <div class="container">
+        <div class="my-3 p-3 bg-white rounded box-shadow">
+            <div class="row">
+                <div class="col-md-2">
+                    <div class="card bg-dark text-white d-none d-md-block">
+                      <img class="card-img" src="{{ book.cover_picture.url }}" alt="Card image">
+                    </div>
+                </div>
+                <div class="col-md-10">
+                    <div class="d-flex flex-column">
+                      <div class="p-1"> <span class="text-danger">书名:</span> <span class="ml-2 text-success">{{ book.name }}</span> </div>
+                      <div class="p-1 d-none d-md-block">
+                          <span class="text-danger">简介:</span> <span class="ml-2 text-success">{{ book.desc }}</span>
+                      </div>
+                      <!--小屏幕显示模块-->
+                      <div class="p-1 d-block d-sm-none">
+                          <a class="text-danger" href="#description" data-toggle="collapse" aria-expanded="false" aria-controls="description">点击显示简介</a>
+                      </div>
+                      <div class="p-1 collapse" id="description">
+                          <div class="card card-body">
+                              {{ book.desc }}
+                          </div>
+                      </div>
+                        <!--小屏幕显示模块结束-->
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="nav-scroller bg-white box-shadow">
+            <nav class="nav nav-underline container" >
+               <a class="nav-link {% ifequal 'recent' data %}active text-success{% endifequal %}" href="?data=recent">最新书评</a>
+               <a class="nav-link {% ifequal 'hot' data %}active text-success{% endifequal %}" href="?data=hot">精彩书评</a>
+               <a class="nav-link" href="#comment-form" data-toggle="collapse" aria-expanded="false" aria-controls="comment-form">写书评</a>
+               <a class="nav-link" href="#">下载电子书</a>
+            </nav>
+        </div>
+
+        <!-- comment form -->
+        <div class="my-3 p-3 bg-white rounded box-shadow collapse" id="comment-form">
+            <form>
+                <div class="form-group">
+                    <textarea class="form-control" id="message-text-{{ book.id }}" placeholder="写下你的书评..."></textarea>
+                </div>
+                <button type="button" class="btn btn-sm btn-success" onclick="submitComment({{ book.id }}, 0)">发 送</button>
+            </form>
+        </div>
+
+        <!-- book recent comments data-->
+         <div class="my-3 p-3 bg-white rounded box-shadow">
+             <h6 class="border-bottom border-gray pb-2 mb-0">
+                {{ info }}书评({{ comment_count }})
+             </h6>
+            <div class="media text-muted pt-3">
+              <img data-src="holder.js/32x32?theme=thumb&bg=007bff&fg=007bff&size=1" alt="" class="mr-2 rounded">
+              <p class="media-body pb-3 mb-0 small lh-125 border-bottom border-gray">
+                <strong class="d-block text-gray-dark">@username</strong>
+                Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus.
+              </p>
+            </div>
+            <div class="media text-muted pt-3">
+              <img data-src="holder.js/32x32?theme=thumb&bg=e83e8c&fg=e83e8c&size=1" alt="" class="mr-2 rounded">
+              <p class="media-body pb-3 mb-0 small lh-125 border-bottom border-gray">
+                <strong class="d-block text-gray-dark">@username</strong>
+                Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus.
+              </p>
+            </div>
+
+            <div class="media text-muted pt-3">
+              <img data-src="holder.js/32x32?theme=thumb&bg=6f42c1&fg=6f42c1&size=1" alt="" class="mr-2 rounded">
+              <p class="media-body pb-3 mb-0 small lh-125 border-bottom border-gray">
+                <strong class="d-block text-gray-dark">@username</strong>
+                Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus.
+              </p>
+            </div>
+        </div>
+    </div>
+{% endblock %}

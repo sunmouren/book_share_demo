@@ -1,5 +1,6 @@
 from django.db import models
 from django.conf import settings
+from django.urls import reverse
 
 from users.models import UserProfile
 
@@ -42,6 +43,12 @@ class Book(models.Model):
         verbose_name = '图书'
         verbose_name_plural = verbose_name
         ordering = ('-created',)
+
+    def get_absolute_url(self):
+        """
+        :return: 图书绝对路径
+        """
+        return reverse('books:book_detail', args=[self.id])
 
     def __str__(self):
         return self.name

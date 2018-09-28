@@ -8,11 +8,12 @@
 
 from django.urls import path
 
-from .views import BookListView
+from .views import BookListView, BookDetailView
 
 
 app_name = 'books'
 
 urlpatterns = [
     path('list/', BookListView.as_view(), name='book_list'),
+    path('detail/<int:book_id>/', BookDetailView.as_view(), name='book_detail'),
 ]

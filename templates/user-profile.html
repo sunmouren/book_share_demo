@@ -13,8 +13,8 @@
                 <span class="d-block">{{ user.signature }}</span>
               </div>
             </div>
-
         </div>
+
         <div class="nav-scroller bg-white box-shadow">
             <nav class="nav nav-underline container" >
                <a class="nav-link {% ifequal 'books' data %}active text-success{% endifequal %}" href="?data=books">图书</a>
@@ -33,7 +33,7 @@
                 <div class="row mb-2">
                 {% for book in books %}
                     <div class="col-md-4">
-                      <div class="card mb-4 box-shadow ">
+                      <div class="card mb-4 box-shadow">
                         <img class="card-img-top img-fluid flex-auto d-none d-md-block img-thumbnail" src="{{ book.cover_picture.url }}" style="height: 225px;" alt="Card image cap">
                           <div class="card-body">
                               <h5 class="card-title"><a href="#">{{ book.name }}</a></h5>
@@ -87,7 +87,7 @@
         <!-- user comments data-->
         {% ifequal 'comments' data %}
              <div class="my-3 p-3 bg-white rounded box-shadow">
-                 <h6 class="border-bottom border-gray pb-2 mb-0">{{ is_owner }}的评论</h6>
+                 <h6 class="border-bottom border-gray pb-2 mb-0">{{ info }}的评论</h6>
                 <div class="media text-muted pt-3">
                   <img data-src="holder.js/32x32?theme=thumb&bg=007bff&fg=007bff&size=1" alt="" class="mr-2 rounded">
                   <p class="media-body pb-3 mb-0 small lh-125 border-bottom border-gray">

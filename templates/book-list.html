@@ -32,7 +32,7 @@
                       <div class="card mb-4 box-shadow">
                         <img class="card-img-top img-fluid flex-auto d-none d-md-block img-thumbnail" src="{{ book.cover_picture.url }}" style="height: 225px;" alt="Card image cap">
                           <div class="card-body">
-                              <h5 class="card-title"><a href="#">{{ book.name }}</a></h5>
+                              <h5 class="card-title"><a href="{{ book.get_absolute_url }}">{{ book.name }}</a></h5>
                               <div class="d-flex justify-content-between align-items-center">
                                   <div class="btn-group">
                                       <button type="button" class="btn btn-sm btn-outline-secondary"
@@ -42,7 +42,7 @@
                                 <small class="text-muted">{{ book.created|timesince }}前</small>
                               </div>
                               <div class="collapse" id="CommentForm{{ book.id }}" style="margin-top: 8px">
-                                     <form>
+                                  <form>
                                         <div class="form-group">
                                           <textarea class="form-control" id="message-text-{{ book.id }}"></textarea>
                                         </div>

@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
+from django.urls import reverse
 
 
 class UserProfile(AbstractUser):
@@ -17,8 +18,16 @@ class UserProfile(AbstractUser):
         verbose_name = '用户信息'
         verbose_name_plural = verbose_name
 
+    def get_absolute_url(self):
+        """
+        :return: 用户绝对路径
+        """
+        return reverse('users:user_profile', args=[self.id])
+
     def __str__(self):
         if self.nickname:
             return self.nickname
         else:
             return self.username
+
+

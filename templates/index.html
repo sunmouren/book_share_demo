@@ -20,7 +20,7 @@
 
             {% for hot_comment in hot_comments %}
                 <div class="media text-muted pt-3">
-                    <a href="#">
+                    <a href="{{ hot_comment.user.get_absolute_url }}">
                         <img src="{{ hot_comment.user.avatar.url }}" alt="" class="mr-2 rounded" style="width: 32px; height: 32px;">
                     </a>
                     <p class="media-body pb-3 mb-0 small lh-125 border-bottom border-gray">
