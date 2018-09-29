@@ -23,8 +23,8 @@ class Comment(MPTTModel):
     like_number = models.PositiveIntegerField(default=0, verbose_name='点赞数')
     created = models.DateTimeField(auto_now_add=True, db_index=True, verbose_name='评论时间')
 
-    class MPPTMeta:
-        order_insertion_by = ['-created']
+    class MPTTMeta:
+        order_insertion_by = ('-created', )
 
     class Meta:
         verbose_name = '书评'

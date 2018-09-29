@@ -30,7 +30,7 @@
                 </div>
             </div>
         </div>
-        <div class="nav-scroller bg-white box-shadow">
+        <div class="nav-scroller bg-white box-shadow" id="recent">
             <nav class="nav nav-underline container" >
                <a class="nav-link {% ifequal 'recent' data %}active text-success{% endifequal %}" href="?data=recent">最新书评</a>
                <a class="nav-link {% ifequal 'hot' data %}active text-success{% endifequal %}" href="?data=hot">精彩书评</a>
@@ -54,6 +54,59 @@
              <h6 class="border-bottom border-gray pb-2 mb-0">
                 {{ info }}书评({{ comment_count }})
              </h6>
+
+             {% for comment in comments %}
+                <div class=" media text-muted pt-3" id="comment-{{ comment.id }}">
+                    <a href="{{ comment.user.get_absolute_url }}">
+                        <img src="{{ comment.user.avatar.url }}" alt="" class="mr-2 rounded" style="width: 32px; height: 32px;">
+                    </a>
+                    <div class="media-body pb-3 mb-0 small lh-125 border-bottom border-gray">
+                        <strong class="d-block text-gray-dark">
+                            {{ comment.user }} <span><small>{{ comment.created }}</small></span>
+                        </strong>
+                        <p class="mt-1 mb-0">{{ comment.content }}</p>
+                        <p class="mt-1 mb-0">
+                            <a class="text-info">
+                                <i class="fa fa-thumbs-o-up"></i>
+                                <span id="likectcount_{{ comment.id }}">{{ comment.id }}</span>
+                            </a>
+                            <a class="ml-2 text-info" data-toggle="collapse" href="#CommentForm{{ comment.id }}" aria-expanded="false"
+                               aria-controls="CommentForm{{ comment.id }}">
+                                <i class="fa fa-comment-o"></i>
+                                <small>回复</small>
+                            </a>
+                             {% ifequal request.user comment.user %}
+                                 <a class="ml-2 text-info" onclick="deleteComment({{ comment.id }})" data-toggle="tooltip" data-placement="top" title="确定删除吗？">
+                                    <i class="fa fa-trash-o"></i>
+                                    <small>删除</small>
+                                 </a>
+                             {% endifequal %}
+
+                        </p>
+                        <!--父书评-->
+                        {% if comment.parent %}
+                            <p class="mt-1 mb-0 border-bottom-0 border-top-0 border-right-0"
+                               style="border-style: solid; border-color: gray; border-left-width: 2px;">
+                                <a href="{{ comment.parent.user.get_absolute_url }}">@{{ comment.parent.user }}: </a>
+                                  {{ comment.parent.content }}
+                            </p>
+                        {% endif %}
+                        <!--回复表单-->
+                        <div class="collapse mt-3 mb-0" id="CommentForm{{ comment.id }}" >
+                            <form>
+                            <div class="form-group">
+                                <textarea class="form-control" id="message-text-{{ comment.id }}"
+                                data-login="{% if not request.user.is_authenticated %}un{% endif %}login"></textarea>
+                            </div>
+                            </form>
+                            <button type="button" class="btn btn-sm btn-success float-left" onclick="submitReply({{ book.id }}, {{ comment.id }})">发 送</button>
+                        </div>
+                    </div>
+
+                </div>
+            {% endfor %}
+
+
             <div class="media text-muted pt-3">
               <img data-src="holder.js/32x32?theme=thumb&bg=007bff&fg=007bff&size=1" alt="" class="mr-2 rounded">
               <p class="media-body pb-3 mb-0 small lh-125 border-bottom border-gray">

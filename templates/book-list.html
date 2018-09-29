@@ -29,7 +29,8 @@
             <div class="row" style="margin-top: 16px">
                 {% for book in books %}
                     <div class="col-md-4">
-                      <div class="card mb-4 box-shadow">
+                        <!-- 桌面排版 -->
+                        <div class="card mb-4 box-shadow">
                         <img class="card-img-top img-fluid flex-auto d-none d-md-block img-thumbnail" src="{{ book.cover_picture.url }}" style="height: 225px;" alt="Card image cap">
                           <div class="card-body">
                               <h5 class="card-title"><a href="{{ book.get_absolute_url }}">{{ book.name }}</a></h5>
@@ -41,7 +42,7 @@
                                   </div>
                                 <small class="text-muted">{{ book.created|timesince }}前</small>
                               </div>
-                              <div class="collapse" id="CommentForm{{ book.id }}" style="margin-top: 8px">
+                              <div class="collapse mt-2" id="CommentForm{{ book.id }}" >
                                   <form>
                                         <div class="form-group">
                                           <textarea class="form-control" id="message-text-{{ book.id }}"></textarea>
@@ -52,6 +53,13 @@
                               </div>
                           </div>
                       </div>
+{#                        <!-- 手机排版 -->#}
+{#                        <div class="card mb-4 bg-dark text-white d-block d-sm-none" >#}
+{#                            <img class="card-img" src="{{ book.cover_picture.url }}" style="height: 100px" alt="Card image">#}
+{#                            <div class="card-img-overlay pt-6">#}
+{#                                <h5><strong>{{ book.name }}</strong></h5>#}
+{#                            </div>#}
+{#                        </div>#}
                     </div>
                 {% endfor %}
 

@@ -29,4 +29,6 @@ urlpatterns = [
     path('user/', include('users.urls', namespace='users')),
     # books
     path('book/', include('books.urls', namespace='books')),
+    # comments
+    path('comment/', include('comments.urls', namespace='comments')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

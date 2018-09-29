@@ -19,5 +19,5 @@ def get_hot_comments():
     获取热门评论
     :return:
     """
-    hot_comments = Comment.objects.all()
+    hot_comments = Comment.objects.all().order_by('-created')[:2]
     return hot_comments

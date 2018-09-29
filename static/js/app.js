@@ -42,49 +42,112 @@ function submitComment(bid, pid){
     }
     var comment_text = $.trim($("#message-text-" + bid).val());
 
-    tips(comment_text, 'danger');
+    if (comment_text == '') {
+        tips('评论不能为空！', 'danger');
+        return false;
+    }
+    $.ajax({
+        cache: false,
+        type: "POST",
+        data: {'bid': bid, 'pid': parseInt(pid), 'content': comment_text},
+        url: "/comment/submit/",
+        async: true,
+        //成功返回之后调用的函数
+        success:function(data){
+            if (data['msg'] == 'ok') {
+                tips('评论提交成功，页面即将刷新~', 'success');
+                $("#message-text-" + bid).val("");
+                setTimeout(function () {
+                    location.reload();
+                    window.location.href= location.href + '#recent';
+                }, 1500);
+                return true;
+            } else {
+                tips('评论出错啦！Ps: 目前不支持有emoji表情符号！对方或已删除评论！', 'danger');
+                return false;
+            }
+        },
+        //调用出错执行的函数
+        error: function(){
+            tips('好气啊 提交失败啦 Ps: 目前不支持有emoji表情符号！对方或已删除评论！', 'danger');
+            return false;
+        }
+    });
+}
+
+/* 回复 */
+function submitReply(bid, pid){
+     // 判断是否登录，如果没有就跳转到登录界面
+    var login = $("#message-text-" + pid).data('login');
+    if(login == 'unlogin'){
+        tips('请登入后操作！', 'danger');
+        window.location.href = '/user/login/';
+        return false;
+    }
+    var comment_text = $.trim($("#message-text-" + pid).val());
 
     if (comment_text == '') {
         tips('评论不能为空！', 'danger');
         return false;
     }
-    // $.ajax({
-    //     cache: false,
-    //     type: "POST",
-    //     data: {'aid': aid, 'pid': parseInt(pid), 'content': comment_text},
-    //     url: "/comment/submit/",
-    //     async: true,
-    //     beforeSend : function () {
-    //         pageLoader('show'); // loading
-    //     },
-    //     //成功返回之后调用的函数
-    //     success:function(data){
-    //         if (data['msg'] == 'ok') {
-    //             tips('评论提交成功，页面即将刷新~', 'success');
-    //             $("#commentarea_"+pid).val("");
-    //             setTimeout(function () {
-    //                 location.reload();
-    //                 window.location.href= location.href + '#recentcomments';
-    //             }, 1500);
-    //             return true;
-    //         } else {
-    //             tips('评论出错啦！Ps: 目前不支持有emoji表情符号！对方或已删除评论！', 'danger');
-    //             return false;
-    //         }
-    //     },
-    //     complete: function () {
-    //         pageLoader('hide');
-    //     },
-    //
-    //     //调用出错执行的函数
-    //     error: function(){
-    //         tips('好气啊 提交失败啦 Ps: 目前不支持有emoji表情符号！对方或已删除评论！', 'danger');
-    //         return false;
-    //     }
-    // });
+    $.ajax({
+        cache: false,
+        type: "POST",
+        data: {'bid': bid, 'pid': parseInt(pid), 'content': comment_text},
+        url: "/comment/submit/",
+        async: true,
+        //成功返回之后调用的函数
+        success:function(data){
+            if (data['msg'] == 'ok') {
+                tips('回复书评成功，页面即将刷新~', 'success');
+                $("#message-text-" + pid).val("");
+                setTimeout(function () {
+                    location.reload();
+                    window.location.href= location.href + '#recent';
+                }, 1500);
+                return true;
+            } else {
+                tips('评论出错啦！Ps: 目前不支持有emoji表情符号！对方或已删除评论！', 'danger');
+                return false;
+            }
+        },
+        //调用出错执行的函数
+        error: function(){
+            tips('好气啊 提交失败啦 Ps: 目前不支持有emoji表情符号！对方或已删除评论！', 'danger');
+            return false;
+        }
+    });
 }
 
-// 取消评论
+// 取消书评表单
 function cancelComment(id) {
 	$('#CommentForm' + id).collapse('hide');
 }
+
+// 删除评论
+function deleteComment(bid) {
+    $.ajax({
+        cache: false,
+        type : "POST",
+        data : {'bid': parseInt(bid)},
+        url : "/comment/delete/",
+        async: true,
+        //成功返回之后调用的函数
+        success:function(data){
+            if (data['msg'] == 'ok') {
+                tips('删除成功~', 'success');
+                setTimeout(function () {
+                    $('#comment-'+bid).remove();
+                }, 1000);
+
+            }else {
+                tips('好气~ 删除失败!', 'danger');
+            }
+        },
+        //调用出错执行的函数
+        error: function(){
+            tips('好气~ 提交失败!', 'danger');
+        }
+    });
+}
+
