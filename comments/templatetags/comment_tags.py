@@ -19,5 +19,15 @@ def get_hot_comments():
     获取热门评论
     :return:
     """
-    hot_comments = Comment.objects.all().order_by('-created')[:2]
-    return hot_comments
+    return Comment.objects.all().order_by('-created')[:2]
+
+
+@register.simple_tag
+def check_is_liked_comment(request, comment):
+    """
+    检查当前用户是否在喜欢书评列表中
+    :param request:
+    :param comment:
+    :return:
+    """
+    return request.user in comment.like_user.all()

@@ -13,6 +13,6 @@ from .models import Comment
 
 
 @receiver(m2m_changed, sender=Comment.like_user.through)
-def like_like_changed(sender, instance, **kwargs):
+def like_user_changed(sender, instance, **kwargs):
     instance.like_number = instance.like_user.count()
     instance.save()

@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 
+{% load comment_tags %}
 
 {% block main %}
     <div class="container">
@@ -56,6 +57,7 @@
              </h6>
 
              {% for comment in comments %}
+                 {% check_is_liked_comment request comment as is_liked %}
                 <div class=" media text-muted pt-3" id="comment-{{ comment.id }}">
                     <a href="{{ comment.user.get_absolute_url }}">
                         <img src="{{ comment.user.avatar.url }}" alt="" class="mr-2 rounded" style="width: 32px; height: 32px;">
@@ -66,9 +68,11 @@
                         </strong>
                         <p class="mt-1 mb-0">{{ comment.content }}</p>
                         <p class="mt-1 mb-0">
-                            <a class="text-info">
+                            <a class="{% if is_liked %}text-danger{% else %}text-info{% endif %}" id="like-comment-{{ comment.id }}"
+                               data-login="{% if not request.user.is_authenticated %}un{% endif %}login"
+                               data-action="{% if is_liked %}un{% endif %}like" onclick="SubmitLike({{ comment.id }})">
                                 <i class="fa fa-thumbs-o-up"></i>
-                                <span id="likectcount_{{ comment.id }}">{{ comment.id }}</span>
+                                <span id="like-count-{{ comment.id }}">{{ comment.like_number }}</span>
                             </a>
                             <a class="ml-2 text-info" data-toggle="collapse" href="#CommentForm{{ comment.id }}" aria-expanded="false"
                                aria-controls="CommentForm{{ comment.id }}">
@@ -83,12 +87,11 @@
                              {% endifequal %}
 
                         </p>
-                        <!--父书评-->
+                        <!--父级书评-->
                         {% if comment.parent %}
-                            <p class="mt-1 mb-0 border-bottom-0 border-top-0 border-right-0"
-                               style="border-style: solid; border-color: gray; border-left-width: 2px;">
+                            <p class="mt-1 mb-0 p-1 border border-secondary border-bottom-0 border-top-0 border-right-0">
                                 <a href="{{ comment.parent.user.get_absolute_url }}">@{{ comment.parent.user }}: </a>
-                                  {{ comment.parent.content }}
+                                <small>{{ comment.parent.content }}</small>
                             </p>
                         {% endif %}
                         <!--回复表单-->

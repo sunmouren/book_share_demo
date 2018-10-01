@@ -35,15 +35,15 @@ class LikeCommentAjax(LoginRequiredMixin, View):
     允许条件: 用户已登录和只能通过post方式提交
     """
     def post(self, request):
-        comment_id = request.POST.get('cid', None)
+        comment_id = request.POST.get('bid', None)
         action = request.POST.get('action', None)
         if comment_id and action:
             try:
                 comment = Comment.objects.get(id=comment_id)
                 if action == 'like':
-                    comment.user_like.add(request.user)
+                    comment.like_user.add(request.user)
                 else:
-                    comment.user_like.remove(request.user)
+                    comment.like_user.remove(request.user)
                 return JsonResponse({'msg': 'ok'})
             except Comment.DoesNotExist:
                 return JsonResponse({'msg': 'ko'})

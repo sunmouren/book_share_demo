@@ -151,3 +151,40 @@ function deleteComment(bid) {
     });
 }
 
+/* 喜欢评论 */
+function SubmitLike(bid) {
+    // 判断是否登录，如果没有就跳转到登录界面
+    var login = $("#like-comment-"+bid).data('login');
+    if(login == 'unlogin'){
+        window.location.href = '/user/login/';
+        return false;
+    }
+    var action =  $("#like-comment-"+bid).data('action');
+    $.ajax({
+        cache: false,
+        type: "POST",
+        url: "/comment/like/",
+        data: {'bid': bid, 'action': action},
+        async: true,
+        success: function(data) {
+            if (data['msg'] == 'ok') {
+                $("#like-comment-"+bid).data('action', action == 'like' ? 'unlike' : 'like');
+                var previous_likes = parseInt($("#like-count-"+bid).text());
+                if ($("#like-comment-"+bid).hasClass("text-info")) {
+                    $("#like-comment-"+bid).removeClass("text-info");
+                    $("#like-comment-"+bid).addClass("text-danger");
+
+                    $("#like-count-"+bid).text(previous_likes + 1);
+                    tips('+1', 'success');
+                } else {
+                    $("#like-comment-"+bid).removeClass("text-danger");
+                    $("#like-comment-"+bid).addClass("text-info");
+
+                    $("#like-count-"+bid).text(previous_likes - 1)
+                    tips('-1', 'success');
+                }
+            }
+        },
+    });
+}
+
