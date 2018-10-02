@@ -35,7 +35,7 @@
                 <a class="nav-link" href="{% url 'books:book_list' %}">图书</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="#">书友</a>
+                <a class="nav-link" href="{% url 'users:user_list' %}">书友</a>
               </li>
 
             {% if request.user.is_authenticated %}

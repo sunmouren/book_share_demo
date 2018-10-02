@@ -188,3 +188,33 @@ function SubmitLike(bid) {
     });
 }
 
+/* 关注用户 */
+function FollowUser(uid) {
+    // 判断是否登录，如果没有就跳转到登录界面
+    var login = $("#follow-user-"+uid).data('login');
+    if(login == 'unlogin'){
+        window.location.href = '/user/login/';
+        return false;
+    }
+    var action =  $("#follow-user-"+uid).data('action');
+    $.ajax({
+        cache: false,
+        type: "POST",
+        url: "/user/follow/",
+        data: {'uid': uid, 'action': action},
+        async: true,
+        success: function(data) {
+            if (data['msg'] == 'ok') {
+                $("#follow-user-"+uid).data('action', action == 'follow' ? 'unfollow' : 'follow');
+                if ($("#follow-user-"+uid).hasClass("text-success")) {
+                    $("#follow-user-"+uid).removeClass("text-success");
+                    $("#follow-user-"+uid).html('<i class="fa fa-plus"></i> 关注');
+                } else {
+                    $("#follow-user-"+uid).addClass("text-success");
+                    $("#follow-user-"+uid).html('<i class="fa fa-check"></i> 已关注');
+                }
+            }
+        },
+    });
+}
+

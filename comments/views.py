@@ -1,3 +1,4 @@
+from django.shortcuts import render
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import JsonResponse, Http404
 from django.views.generic import View
@@ -5,6 +6,15 @@ from django.views.generic import View
 from books.models import Book
 
 from .models import Comment
+
+
+class HotCommentListView(View):
+    """
+    热门图书列表
+    """
+    def get(self, request):
+        hot_comments = Comment.objects.exclude(like_number=0).order_by('-like_number')
+        return render(request, 'hot-comment-list.html', {'hot_comments': hot_comments})
 
 
 class SubmitCommentAjax(LoginRequiredMixin, View):

@@ -1,4 +1,3 @@
-from django.http import Http404
 from django.shortcuts import render, get_object_or_404
 from django.views.generic import View
 
@@ -59,11 +58,11 @@ class BookDetailView(View):
         :return: 如果data==recent则返回最新书评，如果data==hot则返回精彩评论，其他情况则返回[]
         """
         if data == 'recent':
-            comments = book.comments.all().order_by('-created')
+            comments = book.comments.order_by('-created')
             info = '最新'
         elif data == 'hot':
             # 可根据书评点赞书进行降序排序
-            comments = book.comments.all()
+            comments = book.comments.exclude(like_number=0).order_by('-like_number')
             info = '精彩'
         else:
             comments = []

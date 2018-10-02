@@ -1,0 +1,91 @@
+{% extends "base.html" %}
+
+{% load comment_tags %}
+
+{% block main %}
+    <div class="container">
+        <div class="my-3 p-3 bg-white rounded box-shadow">
+            <h6 class="border-bottom border-gray pb-2 mb-0">全部热门书评</h6>
+
+            {% for hot_comment in hot_comments %}
+                {% check_is_liked_comment request hot_comment as is_liked %}
+                <div class="media text-muted pt-3">
+                    <a href="{{ hot_comment.user.get_absolute_url }}">
+                        <img src="{{ hot_comment.user.avatar.url }}" alt="" class="mr-2 rounded" style="width: 32px; height: 32px;">
+                    </a>
+                    <div class="media-body pb-3 mb-0 small lh-125 border-bottom border-gray">
+                        <strong class="d-block text-gray-dark mb-1">
+                            {{ hot_comment.user }}
+                            <cite>
+                                <span><small>by</small></span>
+                                <a class="text-gray-dark" href="{{ hot_comment.book.get_absolute_url }}"><small>{{ hot_comment.book.name }}</small></a>
+                            </cite>
+                        </strong>
+                        <p class="mt-1 mb-0">{{ hot_comment.content }}</p>
+                        <p class="mt-1 mb-0">
+                            <a class="{% if is_liked %}text-danger{% else %}text-info{% endif %}" id="like-hot_comment-{{ hot_comment.id }}"
+                               data-login="{% if not request.user.is_authenticated %}un{% endif %}login"
+                               data-action="{% if is_liked %}un{% endif %}like" onclick="SubmitLike({{ hot_comment.id }})">
+                                <i class="fa fa-thumbs-o-up"></i>
+                                <span id="like-count-{{ hot_comment.id }}">{{ hot_comment.like_number }}</span>
+                            </a>
+                            <a class="ml-2 text-info" data-toggle="collapse" href="#CommentForm{{ hot_comment.id }}" aria-expanded="false"
+                               aria-controls="CommentForm{{ hot_comment.id }}">
+                                <i class="fa fa-hot_comment-o"></i>
+                                <small>回复</small>
+                            </a>
+                             {% ifequal request.user hot_comment.user %}
+                                 <a class="ml-2 text-info" onclick="deleteComment({{ hot_comment.id }})" data-toggle="tooltip" data-placement="top" title="确定删除吗？">
+                                    <i class="fa fa-trash-o"></i>
+                                    <small>删除</small>
+                                 </a>
+                             {% endifequal %}
+
+                        </p>
+                        <!--父级书评-->
+                        {% if hot_comment.parent %}
+                            <p class="mt-1 mb-0 p-1 border border-secondary border-bottom-0 border-top-0 border-right-0">
+                                <a href="{{ hot_comment.parent.user.get_absolute_url }}">@{{ hot_comment.parent.user }}: </a>
+                                <small>{{ hot_comment.parent.content }}</small>
+                            </p>
+                        {% endif %}
+                        <!--回复表单-->
+                        <div class="collapse mt-3 mb-0" id="CommentForm{{ hot_comment.id }}" >
+                            <form>
+                            <div class="form-group">
+                                <textarea class="form-control" id="message-text-{{ hot_comment.id }}"
+                                data-login="{% if not request.user.is_authenticated %}un{% endif %}login"></textarea>
+                            </div>
+                            </form>
+                            <button type="button" class="btn btn-sm btn-success float-left" onclick="submitReply({{ hot_comment.book.id }}, {{ hot_comment.id }})">发 送</button>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+
+
+            <div class="media text-muted pt-3">
+              <img data-src="holder.js/32x32?theme=thumb&bg=007bff&fg=007bff&size=1" alt="" class="mr-2 rounded">
+              <p class="media-body pb-3 mb-0 small lh-125 border-bottom border-gray">
+                <strong class="d-block text-gray-dark">@username</strong>
+                Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus.
+              </p>
+            </div>
+            <div class="media text-muted pt-3">
+              <img data-src="holder.js/32x32?theme=thumb&bg=e83e8c&fg=e83e8c&size=1" alt="" class="mr-2 rounded">
+              <p class="media-body pb-3 mb-0 small lh-125 border-bottom border-gray">
+                <strong class="d-block text-gray-dark">@username</strong>
+                Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus.
+              </p>
+            </div>
+
+            <div class="media text-muted pt-3">
+              <img data-src="holder.js/32x32?theme=thumb&bg=6f42c1&fg=6f42c1&size=1" alt="" class="mr-2 rounded">
+              <p class="media-body pb-3 mb-0 small lh-125 border-bottom border-gray">
+                <strong class="d-block text-gray-dark">@username</strong>
+                Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus.
+              </p>
+            </div>
+        </div>
+    </div>
+{% endblock %}
