@@ -6,12 +6,16 @@
 @desc: 
 """
 from django.urls import path
-from .views import UserProfileView, UserListView, FollowUserAjax
+from .views import UserProfileView, UserListView, FollowUserAjax,\
+    UserLoginView, UserRegisterView, UserLogoutView
 
 
 app_name = 'users'
 
 urlpatterns = [
+    path('login/', UserLoginView.as_view(), name='user_login'),
+    path('logout/', UserLogoutView.as_view(), name='user_logout'),
+    path('register/', UserRegisterView.as_view(), name='user_register'),
     path('profile/<int:user_id>/', UserProfileView.as_view(), name='user_profile'),
     path('list/', UserListView.as_view(), name='user_list'),
     path('follow/', FollowUserAjax.as_view(), name='follow_user'),
