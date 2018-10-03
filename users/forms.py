@@ -25,3 +25,9 @@ class UserRegisterForm(forms.Form):
     email = forms.EmailField(required=True)
     password1 = forms.CharField(required=True, min_length=5)
     password2 = forms.CharField(required=True, min_length=5)
+
+
+class ModifyUserProfileForm(forms.ModelForm):
+    class Meta:
+        model = UserProfile
+        fields = ['avatar', 'nickname', 'signature']

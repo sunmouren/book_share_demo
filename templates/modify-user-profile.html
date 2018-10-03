@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+
+{% block main %}
+    <div class="container">
+        <div class="my-3 p-3 bg-white rounded box-shadow">
+         <h6 class="border-bottom border-gray pb-2 mb-3">编辑资料</h6>
+            <div class="form-group row">
+                <label for="id_avatar" class="col-sm-1 col-form-label">旧头像</label>
+                <div class="col-sm-11 d-flex flex-column">
+                    <img src="{{ user.avatar.url }}" alt="" class="mr-2 rounded float-right" style="width: 32px; height: 32px">
+                </div>
+            </div>
+            <form method="post" enctype="multipart/form-data" action="{% url 'users:modify_profile' user.id %}">
+                {% csrf_token %}
+              <div class="form-group row">
+                <label for="id_avatar" class="col-sm-1 col-form-label">新头像</label>
+                <div class="col-sm-11 d-flex flex-column">
+                    <input type="file" class="form-control-file" id="id_avatar" name="avatar">
+                </div>
+              </div>
+
+              <div class="form-group row">
+                <label for="id_nickname" class="col-sm-1 col-form-label">昵称</label>
+                <div class="col-sm-11">
+                  <input type="text" class="form-control" id="id_nickname" name="nickname" value="{{ user.nickname }}">
+                </div>
+              </div>
+              <div class="form-group row">
+                <label for="id_signature" class="col-sm-1 col-form-label">座右铭</label>
+                <div class="col-sm-11">
+                  <input type="text" class="form-control" id="id_signature" name="signature" value="{{ user.signature }}">
+                </div>
+              </div>
+
+              <div class="form-group row">
+                <div class="col-sm-10">
+                  <button type="submit" class="btn btn-success">确认修改</button>
+                </div>
+              </div>
+            </form>
+
+            {% if modify_from.errors.items %}
+               <div class="alert alert-danger alert-dismissible fade show mt-2" role="alert">
+                    {% for key, error in modify_from.errors.items %}
+                        {{ error }}
+                    {% endfor %}
+                  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+           {% endif %}
+        </div>
+    </div>
+{% endblock %}
+
+{% block custom_js %}
+    <script type="text/javascript">
+        {% ifequal 'ok' status %}
+            $(function () {
+                tips('修改成功~', 'success');
+                return true;
+            });
+        {% endifequal %}
+    </script>
+{% endblock %}

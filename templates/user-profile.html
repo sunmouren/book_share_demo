@@ -11,8 +11,12 @@
                 <div class="d-flex justify-content-between align-items-center w-100">
                   <strong class="text-gray-dark">{{ user }}</strong>
                   {% check_is_following_user request user as is_following %}
-                  {% ifnotequal user request.user %}
-                       <a class="{% if is_following %}text-success{% endif %}" id="follow-user-{{ user.id }}" href="javascript:void(0)"
+                  {% ifequal user request.user %}
+                      <a href="{% url 'users:modify_profile' user.id %}">
+                        <i class="fa fa-pencil-square-o" aria-hidden="true"></i> 编辑资料
+                      </a>
+                  {% else %}
+                      <a class="{% if is_following %}text-success{% endif %}" id="follow-user-{{ user.id }}" href="javascript:void(0)"
                         data-login="{% if not request.user.is_authenticated %}un{% endif %}login"
                         data-action="{% if is_following %}un{% endif %}follow"
                         onclick="FollowUser({{ user.id }})">
@@ -21,8 +25,8 @@
                         {% else %}
                             <i class="fa fa-plus"></i> 关注
                         {% endif %}
-                    </a>
-                   {% endifnotequal %}
+                      </a>
+                  {% endifequal %}
                 </div>
                 <span class="d-block">{{ user.signature }}</span>
               </div>

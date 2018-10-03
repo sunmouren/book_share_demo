@@ -2,14 +2,14 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.backends import ModelBackend
 from django.contrib.auth.hashers import make_password
 from django.db.models import Q
-from django.http import JsonResponse, HttpResponseRedirect
+from django.http import JsonResponse, HttpResponseRedirect, Http404
 from django.shortcuts import render, get_object_or_404
 from django.urls import reverse
 from django.views.generic import View
 from django.contrib.auth.mixins import LoginRequiredMixin
 
 from .models import UserProfile, FollowUser
-from .forms import UserLoginForm, UserRegisterForm
+from .forms import UserLoginForm, UserRegisterForm, ModifyUserProfileForm
 
 
 class CustomBackend(ModelBackend):
@@ -169,6 +169,45 @@ class FollowUserAjax(LoginRequiredMixin, View):
             except UserProfile.DoesNotExist:
                 return JsonResponse({'msg': 'ko'})
         return JsonResponse({'msg': 'ko'})
+
+
+class ModifyUserProfileView(LoginRequiredMixin, View):
+    def get(self, request, user_id):
+        user = get_object_or_404(UserProfile, id=int(user_id))
+        check_is_owner(request, user)
+        modify_form = ModifyUserProfileForm(instance=user)
+        return render(request, 'modify-user-profile.html', {
+            'user': user,
+            'modify_from': modify_form,
+        })
+
+    def post(self, request, user_id):
+        user = get_object_or_404(UserProfile, id=int(user_id))
+        check_is_owner(request, user)
+        modify_form = ModifyUserProfileForm(instance=user, data=request.POST, files=request.FILES)
+        if modify_form.is_valid():
+            modify_form.save()
+            return render(request, 'modify-user-profile.html', {
+                'user': user,
+                'status': 'ok',
+            })
+        else:
+            return render(request, 'modify-user-profile.html', {
+                'user': user,
+                'modify_from': modify_form,
+                'status': 'ko',
+            })
+
+
+def check_is_owner(request, user):
+    """
+    检查是否为当前所有者
+    :param request:
+    :param user:
+    :return:
+    """
+    if not request.user == user:
+        raise Http404
 
 
 
