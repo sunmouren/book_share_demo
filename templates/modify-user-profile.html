@@ -3,7 +3,8 @@
 {% block main %}
     <div class="container">
         <div class="my-3 p-3 bg-white rounded box-shadow">
-         <h6 class="border-bottom border-gray pb-2 mb-3">编辑资料</h6>
+         <h6 class="border-bottom border-gray pb-2 mb-3">
+             <a href="{{ user.get_absolute_url }}"><i class="fa fa-reply" aria-hidden="true"></i> 主页</a>-编辑资料</h6>
             <div class="form-group row">
                 <label for="id_avatar" class="col-sm-1 col-form-label">旧头像</label>
                 <div class="col-sm-11 d-flex flex-column">

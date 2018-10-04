@@ -142,8 +142,10 @@ class UserListView(View):
     书友列表
     """
     def get(self, request):
+        # 当前页面
+        current_page = 'user_list'
         users = UserProfile.objects.order_by('-date_joined')
-        return render(request, 'user-list.html', {'users': users})
+        return render(request, 'user-list.html', {'users': users, 'current_page': current_page})
 
 
 class FollowUserAjax(LoginRequiredMixin, View):

@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+
+{% load staticfiles %}
+
+{% load my_highlight %}
+
+{% block main %}
+    <div class="container">
+
+         <div class="d-flex align-items-center p-3 my-3 text-white-50 bg-purple rounded box-shadow">
+            <div class="lh-100">
+              <h6 class="mb-0 text-white lh-100">搜索结果:</h6>
+                <small>关键词: {{ query }}</small>
+            </div>
+        </div>
+
+        {% for result in page.object_list %}
+            <div class="my-3 p-3 bg-white rounded box-shadow">
+                <div class="row">
+
+                    <div class="col-md-2">
+                        <div class="card bg-dark text-white d-none d-md-block">
+                          <img class="card-img" src="{{ result.object.cover_picture.url }}" alt="Card image">
+                        </div>
+                    </div>
+                    <div class="col-md-10">
+                        <div class="d-flex flex-column">
+                          <div class="p-1"> <span class="text-danger">书名:</span>
+                              <span class="ml-2 text-success">
+                              {% my_highlight result.object.name with query html_tag 'span' css_class 'text-danger' start_head True %}
+                              </span>
+                          </div>
+                          <div class="p-1 d-none d-md-block">
+                              <span class="text-danger">简介:</span>
+                              <span class="ml-2 text-success">
+                              {% my_highlight result.object.desc with query html_tag 'span' css_class 'text-danger' start_head True %}
+                              </span>
+                          </div>
+                          <!--小屏幕显示模块-->
+                          <div class="p-1 d-block d-sm-none">
+                              <a class="text-danger" href="#description" data-toggle="collapse" aria-expanded="false" aria-controls="description">点击显示简介</a>
+                          </div>
+                          <div class="p-1 collapse" id="description">
+                              <div class="card card-body">
+                                 {% my_highlight result.object.desc with query html_tag 'span' css_class 'text-danger' start_head True %}
+                              </div>
+                          </div>
+                            <!--小屏幕显示模块结束-->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% endblock %}

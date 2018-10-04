@@ -19,5 +19,5 @@ urlpatterns = [
     path('profile/<int:user_id>/', UserProfileView.as_view(), name='user_profile'),
     path('list/', UserListView.as_view(), name='user_list'),
     path('follow/', FollowUserAjax.as_view(), name='follow_user'),
-    path('/<int:user_id>/modify/', ModifyUserProfileView.as_view(), name='modify_profile'),
+    path('<int:user_id>/modify/', ModifyUserProfileView.as_view(), name='modify_profile'),
 ]

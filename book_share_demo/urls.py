@@ -31,4 +31,6 @@ urlpatterns = [
     path('book/', include('books.urls', namespace='books')),
     # comments
     path('comment/', include('comments.urls', namespace='comments')),
+    # search
+    path('search/', include('haystack.urls')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

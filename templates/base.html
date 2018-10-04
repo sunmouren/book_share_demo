@@ -34,8 +34,8 @@
               <li class="nav-item {% ifequal current_page 'book_list' %}active{% endifequal %}" >
                 <a class="nav-link" href="{% url 'books:book_list' %}">图书</a>
               </li>
-              <li class="nav-item">
-                <a class="nav-link" href="{% url 'users:user_list' %}">书友</a>
+              <li class="nav-item {% ifequal current_page 'user_list' %}active{% endifequal %}">
+                <a class="nav-link " href="{% url 'users:user_list' %}">书友</a>
               </li>
 
             {% if request.user.is_authenticated %}
@@ -63,9 +63,9 @@
             </ul>
 
 
-            <form class="form-inline my-2 my-lg-0">
-              <input class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search">
-              <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+            <form class="form-inline my-2 my-lg-0" action="{% url 'haystack_search' %}">
+              <input class="form-control mr-sm-2" id="unit" type="search" name="q" placeholder="Search" aria-label="Search">
+              <button class="btn btn-outline-success my-2 my-sm-0" type="submit">搜书</button>
             </form>
           </div>
       </div>

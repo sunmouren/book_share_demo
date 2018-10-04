@@ -37,13 +37,15 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    # third app
+    'haystack',
+    'imagekit',
+    'mptt',
     # my app
     'users',
     'books',
     'comments',
-    # third app
-    'imagekit',
-    'mptt',
+
 ]
 
 MIDDLEWARE = [
@@ -144,3 +146,16 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 AUTHENTICATION_BACKENDS = (
     'users.views.CustomBackend',
 )
+
+# haystack
+# 引擎
+HAYSTACK_CONNECTIONS = {
+    'default': {
+        'ENGINE': 'books.whoosh_cn_backend.WhooshEngine',  # 'haystack.backends.whoosh_backend.WhooshEngine'
+        'PATH': os.path.join(BASE_DIR, 'whoosh_index'),  # os.path.join(os.path.dirname(__file__), 'whoosh_index'),
+    },
+}
+# 分页数量
+HAYSTACK_SEARCH_RESULTS_PER_PAGE = 10
+# 更新索引
+HAYSTACK_SIGNAL_PROCESSOR = 'haystack.signals.RealtimeSignalProcessor'

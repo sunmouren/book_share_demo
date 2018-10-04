@@ -6,8 +6,6 @@
 @desc: 
 """
 
-import datetime
-
 from django import template
 
 from ..models import Comment
