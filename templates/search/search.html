@@ -20,14 +20,18 @@
 
                     <div class="col-md-2">
                         <div class="card bg-dark text-white d-none d-md-block">
-                          <img class="card-img" src="{{ result.object.cover_picture.url }}" alt="Card image">
+                            <a href="{{ result.object.get_absolute_url }}">
+                                <img class="card-img" src="{{ result.object.cover_picture.url }}" alt="Card image">
+                            </a>
                         </div>
                     </div>
                     <div class="col-md-10">
                         <div class="d-flex flex-column">
                           <div class="p-1"> <span class="text-danger">书名:</span>
                               <span class="ml-2 text-success">
-                              {% my_highlight result.object.name with query html_tag 'span' css_class 'text-danger' start_head True %}
+                              <a href="{{ result.object.get_absolute_url }}">
+                                  {% my_highlight result.object.name with query html_tag 'span' css_class 'text-danger' start_head True %}
+                              </a>
                               </span>
                           </div>
                           <div class="p-1 d-none d-md-block">
@@ -49,6 +53,10 @@
                         </div>
                     </div>
                 </div>
+            </div>
+        {% empty %}
+            <div class="my-3 p-3 bg-white rounded box-shadow">
+                <h6 class="mb-0 text-success">暂无相关数据</h6>
             </div>
         {% endfor %}
     </div>

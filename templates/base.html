@@ -47,9 +47,9 @@
                         <img src="{{ request.user.avatar.url }}" alt="" class="mr-2 rounded" style="width: 20px; height: 20px;">
                     </a>
                     <div class="dropdown-menu" aria-labelledby="dropdown01">
-                      <a class="dropdown-item" href="{% url 'users:user_profile'  request.user.id %}">主页</a>
-                      <a class="dropdown-item" href="{% url 'users:user_logout' %}">注销</a>
-                      <a class="dropdown-item" href="#">Something else here</a>
+                      <a class="dropdown-item" href="{% url 'users:user_profile'  request.user.id %}">我的主页</a>
+                      <a class="dropdown-item" href="{% url 'books:upload_book' %}">上传图书</a>
+                      <a class="dropdown-item" href="{% url 'users:user_logout' %}">退出登录</a>
                     </div>
                 </li>
             {% else %}
@@ -64,7 +64,7 @@
 
 
             <form class="form-inline my-2 my-lg-0" action="{% url 'haystack_search' %}">
-              <input class="form-control mr-sm-2" id="unit" type="search" name="q" placeholder="Search" aria-label="Search">
+              <input class="form-control mr-sm-2" id="unit" type="search" name="q" placeholder="这里输入关键词..." aria-label="Search">
               <button class="btn btn-outline-success my-2 my-sm-0" type="submit">搜书</button>
             </form>
           </div>

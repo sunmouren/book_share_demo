@@ -44,7 +44,7 @@
         <div class="my-3 p-3 bg-white rounded box-shadow collapse" id="comment-form">
             <form>
                 <div class="form-group">
-                    <textarea class="form-control" id="message-text-{{ book.id }}" placeholder="写下你的书评..."></textarea>
+                    <textarea class="form-control" id="message-text-{{ book.id }}" data-login="{% if not request.user.is_authenticated %}un{% endif %}login" placeholder="写下你的书评..."></textarea>
                 </div>
                 <button type="button" class="btn btn-sm btn-success" onclick="submitComment({{ book.id }}, 0)">发 送</button>
             </form>

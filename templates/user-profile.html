@@ -6,7 +6,9 @@
     <div class="container">
        <div class="my-3 p-3 bg-white rounded box-shadow">
             <div class="media text-muted pt-3">
-              <img src="{{ user.avatar.url }}" alt="" class="mr-2 rounded" style="width: 32px; height: 32px">
+                <a href="{{ user.avatar.url }}">
+                    <img src="{{ user.avatar.url }}" alt="" class="mr-2 rounded" style="width: 32px; height: 32px">
+                </a>
               <div class="media-body pb-3 mb-0 small lh-125">
                 <div class="d-flex justify-content-between align-items-center w-100">
                   <strong class="text-gray-dark">{{ user }}</strong>
@@ -36,7 +38,7 @@
         <div class="nav-scroller bg-white box-shadow">
             <nav class="nav nav-underline container" >
                <a class="nav-link {% ifequal 'books' data %}active text-success{% endifequal %}" href="?data=books">图书</a>
-               <a class="nav-link {% ifequal 'comments' data %}active text-success{% endifequal %}" href="?data=comments">评论</a>
+               <a class="nav-link {% ifequal 'comments' data %}active text-success{% endifequal %}" href="?data=comments">书评</a>
                <a class="nav-link {% ifequal 'followings' data %}active text-success{% endifequal %}" href="?data=followings">关注</a>
                <a class="nav-link {% ifequal 'followers' data %}active text-success{% endifequal %}" href="?data=followers">粉丝</a>
                <a class="nav-link" href="#">历史</a>
@@ -52,19 +54,25 @@
                 <h6 class="border-bottom border-gray pb-2 mb-3">{{ info }}上传的图书</h6>
                 <div class="row mb-2">
                 {% for book in books %}
-                    <div class="col-md-4">
+                    <div class="col-md-4" id="bok-{{ book.id }}">
                       <div class="card mb-4 box-shadow">
-                        <img class="card-img-top img-fluid flex-auto d-none d-md-block img-thumbnail" src="{{ book.cover_picture.url }}" style="height: 225px;" alt="Card image cap">
+                          <a href="{{ book.get_absolute_url }}">
+                              <img class="card-img-top img-fluid flex-auto d-none d-md-block img-thumbnail" src="{{ book.cover_picture.url }}" style="height: 225px;" alt="Card image cap">
+                          </a>
                           <div class="card-body">
-                              <h5 class="card-title"><a href="#">{{ book.name }}</a></h5>
+                              <h5 class="card-title"><a href="{{ book.get_absolute_url }}">{{ book.name }}</a></h5>
                               <div class="d-flex justify-content-between align-items-center">
                                   <div class="btn-group">
-                                      <button type="button" class="btn btn-sm btn-outline-secondary"
+                                      <a type="button" class="btn btn-sm bg-light text-info"
                                               data-toggle="collapse" data-target="#CommentForm{{ book.id }}" aria-expanded="false"
-                                              aria-controls="CommentForm{{ book.id }}">写书评</button>
-                                      <button type="button" class="btn btn-sm btn-outline-secondary">下载</button>
+                                              aria-controls="CommentForm{{ book.id }}">写书评</a>
+
+
                                       {% ifequal request.user user %}
-                                           <button type="button" class="btn btn-sm btn-outline-secondary">编辑</button>
+                                           <a href="{% url 'books:edit_book' book.id %}" type="button" class="btn btn-sm bg-light text-info">编辑</a>
+                                           <a type="button" class="btn btn-sm bg-light text-info">删除</a>
+                                      {% else %}
+                                          <a type="button" class="btn btn-sm bg-light text-info">下载</a>
                                       {% endifequal %}
                                   </div>
                                 <small class="text-muted">{{ book.created|date:'Y-m-d' }}</small>
@@ -107,7 +115,7 @@
         <!-- user comments data-->
         {% ifequal 'comments' data %}
              <div class="my-3 p-3 bg-white rounded box-shadow">
-                 <h6 class="border-bottom border-gray pb-2 mb-0">{{ info }}的评论</h6>
+                 <h6 class="border-bottom border-gray pb-2 mb-0">{{ info }}的书评</h6>
 
                  {% include 'comment-list-base.html' %}
 

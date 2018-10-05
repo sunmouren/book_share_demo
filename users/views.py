@@ -8,6 +8,8 @@ from django.urls import reverse
 from django.views.generic import View
 from django.contrib.auth.mixins import LoginRequiredMixin
 
+from utils.checks import check_is_owner
+
 from .models import UserProfile, FollowUser
 from .forms import UserLoginForm, UserRegisterForm, ModifyUserProfileForm
 
@@ -177,10 +179,8 @@ class ModifyUserProfileView(LoginRequiredMixin, View):
     def get(self, request, user_id):
         user = get_object_or_404(UserProfile, id=int(user_id))
         check_is_owner(request, user)
-        modify_form = ModifyUserProfileForm(instance=user)
         return render(request, 'modify-user-profile.html', {
             'user': user,
-            'modify_from': modify_form,
         })
 
     def post(self, request, user_id):
@@ -190,26 +190,19 @@ class ModifyUserProfileView(LoginRequiredMixin, View):
         if modify_form.is_valid():
             modify_form.save()
             return render(request, 'modify-user-profile.html', {
-                'user': user,
                 'status': 'ok',
             })
         else:
+            invalid_keys = [key for key in modify_form.errors]
             return render(request, 'modify-user-profile.html', {
                 'user': user,
                 'modify_from': modify_form,
                 'status': 'ko',
+                'invalid_keys': invalid_keys,
             })
 
 
-def check_is_owner(request, user):
-    """
-    检查是否为当前所有者
-    :param request:
-    :param user:
-    :return:
-    """
-    if not request.user == user:
-        raise Http404
+
 
 
 

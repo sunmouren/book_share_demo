@@ -1,7 +1,82 @@
+from django.http import HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
+from django.urls import reverse
 from django.views.generic import View
+from django.contrib.auth.mixins import LoginRequiredMixin
+
+from utils.checks import check_is_owner
 
 from .models import Book, Category
+from .forms import UploadBookForm
+
+
+class UploadBookView(LoginRequiredMixin, View):
+    """
+    上传图书
+    """
+    def get(self, request):
+        upload_form = UploadBookForm()
+        categories = Category.objects.all()
+        return render(request, 'upload-book.html', {
+            'upload_form': upload_form,
+            'categories': categories,
+        })
+
+    def post(self, request):
+        upload_form = UploadBookForm(data=request.POST, files=request.FILES)
+        if upload_form.is_valid():
+            try:
+                new_book = upload_form.save(commit=False)
+                new_book.upload_user = request.user
+                new_book.save()
+                return HttpResponseRedirect(reverse('users:user_profile', args=[request.user.id]))
+            except BaseException as e:
+                print('upload error {0}'.format(e))
+
+        invalid_keys = [key for key in upload_form.errors]
+        return render(request, 'upload-book.html', {
+            'upload_form': upload_form,
+            'invalid_keys': invalid_keys,
+            'status': 'ko',
+        })
+
+
+class EditBookView(LoginRequiredMixin, View):
+    """
+    编辑修改图书
+    """
+    def get(self, request, book_id):
+        book = get_object_or_404(Book, id=int(book_id))
+        check_is_owner(request, book.upload_user)
+        categories = Category.objects.all()
+        return render(request, 'edit-book.html', {
+            'book': book,
+            'categories': categories,
+        })
+
+    def post(self, request, book_id):
+        book = get_object_or_404(Book, id=int(book_id))
+        check_is_owner(request, book.upload_user)
+        categories = Category.objects.all()
+        # 因为编辑的验证表单和上传的验证表单一样，所以直接使用。
+        edit_form = UploadBookForm(instance=book, data=request.POST, files=request.FILES)
+        if edit_form.is_valid():
+            edit_form.save()
+            return render(request, 'edit-book.html', {
+                'book': book,
+                'categories': categories,
+                'status': 'ok',
+            })
+        else:
+            invalid_keys = [key for key in edit_form.errors]
+            return render(request, 'edit-book.html', {
+                'book': book,
+                'edit_form': edit_form,
+                'categories': categories,
+                'invalid_keys': invalid_keys,
+                'status': 'ko',
+
+            })
 
 
 class BookListView(View):

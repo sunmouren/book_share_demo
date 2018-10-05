@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+
+{% block main %}
+    <div class="container">
+       <div class="d-flex align-items-center p-3 my-3 text-white-50 bg-white rounded box-shadow">
+            <div class="lh-100">
+              <h6 class="mb-0 text-danger lh-100">诶呀~, 页面突然离家出走啦！</h6>
+              <small><a href="{% url 'index' %}">点击这里回家...</a> </small>
+            </div>
+        </div>
+    </div>
+{% endblock %}

@@ -8,12 +8,14 @@
 
 from django.urls import path
 
-from .views import BookListView, BookDetailView
+from .views import BookListView, BookDetailView, UploadBookView, EditBookView
 
 
 app_name = 'books'
 
 urlpatterns = [
+    path('upload/', UploadBookView.as_view(), name='upload_book'),
+    path('<int:book_id>/edit/', EditBookView.as_view(), name='edit_book'),
     path('list/', BookListView.as_view(), name='book_list'),
     path('detail/<int:book_id>/', BookDetailView.as_view(), name='book_detail'),
 ]

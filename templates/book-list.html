@@ -31,14 +31,16 @@
                     <div class="col-md-4">
                         <!-- 桌面排版 -->
                         <div class="card mb-4 box-shadow">
-                        <img class="card-img-top img-fluid flex-auto d-none d-md-block img-thumbnail" src="{{ book.cover_picture.url }}" style="height: 225px;" alt="Card image cap">
+                            <a href="{{ book.get_absolute_url }}">
+                                <img class="card-img-top img-fluid flex-auto d-none d-md-block img-thumbnail" src="{{ book.cover_picture.url }}" style="height: 225px;" alt="Card image cap">
+                            </a>
                           <div class="card-body">
                               <h5 class="card-title"><a href="{{ book.get_absolute_url }}">{{ book.name }}</a></h5>
                               <div class="d-flex justify-content-between align-items-center">
                                   <div class="btn-group">
-                                      <button type="button" class="btn btn-sm btn-outline-secondary"
-                                      data-toggle="collapse" data-target="#CommentForm{{ book.id }}" aria-expanded="false" aria-controls="CommentForm{{ book.id }}">写书评</button>
-                                      <button type="button" class="btn btn-sm btn-outline-secondary">下载</button>
+                                      <a type="button" class="btn btn-sm bg-light text-info"
+                                      data-toggle="collapse" data-target="#CommentForm{{ book.id }}" aria-expanded="false" aria-controls="CommentForm{{ book.id }}">写书评</a>
+                                      <a type="button" class="btn btn-sm bg-light text-info">下载电子书</a>
                                   </div>
                                 <small class="text-muted">{{ book.created|timesince }}前</small>
                               </div>
