@@ -25,7 +25,7 @@ SECRET_KEY = 'bc1+$_bsi*h-+6_i9&q6))sh)6jay^8)wo_n^sr9o(fa*j@i+*'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['192.168.1.105']
+ALLOWED_HOSTS = []
 
 
 # Application definition
@@ -45,7 +45,6 @@ INSTALLED_APPS = [
     'users',
     'books',
     'comments',
-
 ]
 
 MIDDLEWARE = [
@@ -82,10 +81,24 @@ WSGI_APPLICATION = 'book_share_demo.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/2.1/ref/settings/#databases
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+#     }
+# }
+
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'book_share_db',        #数据库名字
+        'USER': 'root',          #账号
+        'PASSWORD': '12345678',      #密码
+        'HOST': '127.0.0.1',    #IP
+        'PORT': '3306',                   #端口
+        'OPTIONS': {
+            'init_command': 'SET default_storage_engine=INNODB,character_set_connection=utf8,collation_connection=utf8_unicode_ci;'
+        },
     }
 }
 

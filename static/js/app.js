@@ -152,35 +152,35 @@ function deleteComment(bid) {
 }
 
 /* 喜欢评论 */
-function SubmitLike(bid) {
+function SubmitLike(cid) {
     // 判断是否登录，如果没有就跳转到登录界面
-    var login = $("#like-comment-"+bid).data('login');
+    var login = $("#like-comment-"+cid).data('login');
     if(login == 'unlogin'){
         window.location.href = '/user/login/';
         return false;
     }
-    var action =  $("#like-comment-"+bid).data('action');
+    var action =  $("#like-comment-"+cid).data('action');
     $.ajax({
         cache: false,
         type: "POST",
         url: "/comment/like/",
-        data: {'bid': bid, 'action': action},
+        data: {'cid': cid, 'action': action},
         async: true,
         success: function(data) {
             if (data['msg'] == 'ok') {
                 $("#like-comment-"+bid).data('action', action == 'like' ? 'unlike' : 'like');
-                var previous_likes = parseInt($("#like-count-"+bid).text());
-                if ($("#like-comment-"+bid).hasClass("text-info")) {
-                    $("#like-comment-"+bid).removeClass("text-info");
-                    $("#like-comment-"+bid).addClass("text-danger");
+                var previous_likes = parseInt($("#like-count-"+cid).text());
+                if ($("#like-comment-"+cid).hasClass("text-info")) {
+                    $("#like-comment-"+cid).removeClass("text-info");
+                    $("#like-comment-"+cid).addClass("text-danger");
 
-                    $("#like-count-"+bid).text(previous_likes + 1);
+                    $("#like-count-"+cid).text(previous_likes + 1);
                     tips('+1', 'success');
                 } else {
-                    $("#like-comment-"+bid).removeClass("text-danger");
-                    $("#like-comment-"+bid).addClass("text-info");
+                    $("#like-comment-"+cid).removeClass("text-danger");
+                    $("#like-comment-"+cid).addClass("text-info");
 
-                    $("#like-count-"+bid).text(previous_likes - 1)
+                    $("#like-count-"+cid).text(previous_likes - 1)
                     tips('-1', 'success');
                 }
             }

@@ -19,7 +19,7 @@ class UserProfile(AbstractUser):
                                default='image/default.jpg', verbose_name='头像')
 
     class Meta:
-        verbose_name = '用户信息'
+        verbose_name = '用户'
         verbose_name_plural = verbose_name
 
     def get_absolute_url(self):
@@ -48,7 +48,7 @@ class FollowUser(models.Model):
     created = models.DateTimeField(auto_now_add=True, db_index=True)
 
     class Meta:
-        verbose_name = '用户关注'
+        verbose_name = '关注'
         verbose_name_plural = verbose_name
         ordering = ('-created',)
 

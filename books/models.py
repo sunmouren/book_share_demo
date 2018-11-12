@@ -37,6 +37,7 @@ class Book(models.Model):
                                     on_delete=models.CASCADE,
                                     related_name='upload_books',
                                     verbose_name='上传者')
+    pdf = models.FileField(upload_to='resource/pdf', blank=True, null=True)
     created = models.DateTimeField(auto_now_add=True, verbose_name='上传时间')
 
     class Meta:

@@ -160,7 +160,7 @@ class FollowUserAjax(LoginRequiredMixin, View):
         if user_id and action:
             try:
                 user = UserProfile.objects.get(id=int(user_id))
-                # Ps: 如果前端避免不了关注自己，那么我就不客气了，我还不信治不了你了，接招吧~
+                # 如果前端避免不了关注自己, 这里总可以了吧，大佬，请绕道，谢谢。
                 if request.user == user:
                     return JsonResponse({'msg': 'ko'})
 

@@ -143,3 +143,9 @@ class BookDetailView(View):
             comments = []
             info = '暂无'
         return comments, info
+
+
+class PreviewPdfView(View):
+    def get(self, request, book_id):
+        book = get_object_or_404(Book, id=int(book_id))
+        return render(request, 'preview-pdf.html', {'book': book})

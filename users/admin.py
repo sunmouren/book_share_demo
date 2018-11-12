@@ -9,6 +9,7 @@ class UserProfileAdmin(admin.ModelAdmin):
     """
     list_display = ['username', 'email', 'date_joined']
     list_filter = ['username', 'email', 'date_joined']
+    search_fields = ['username', 'email']
 
 
 class FollowUserAdmin(admin.ModelAdmin):
