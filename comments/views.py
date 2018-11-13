@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from django.template.loader import render_to_string
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import JsonResponse, Http404
 from django.views.generic import View
@@ -26,13 +27,15 @@ class SubmitCommentAjax(LoginRequiredMixin, View):
         book_id = request.POST.get('bid', None)
         parent_id = request.POST.get('pid', None)
         content = request.POST.get('content', None)
+        print(book_id, parent_id, content)
         if book_id and parent_id and content:
             try:
                 book = Book.objects.get(id=int(book_id))
                 parent = (Comment.objects.get(id=int(parent_id)) if int(parent_id) > 0 else None)
                 new_comment = Comment(user=request.user, book=book, parent=parent, content=content)
                 new_comment.save()
-                return JsonResponse({'msg': 'ok'})
+                cmt_html = get_comment_html(request, book, new_comment)
+                return JsonResponse({'msg': 'ok', 'cmt': cmt_html})
             except (Book.DoesNotExist, Comment.DoesNotExist, BaseException) as e:
                 print("书评异常信息:{0}".format(e))
                 return JsonResponse({'msg': 'ko'})
@@ -45,7 +48,7 @@ class LikeCommentAjax(LoginRequiredMixin, View):
     允许条件: 用户已登录和只能通过post方式提交
     """
     def post(self, request):
-        comment_id = request.POST.get('bid', None)
+        comment_id = request.POST.get('cid', None)
         action = request.POST.get('action', None)
         if comment_id and action:
             try:
@@ -79,6 +82,20 @@ class DeleteCommentAJax(LoginRequiredMixin, View):
         return JsonResponse({'msg': 'ko'})
 
 
+def get_comment_html(request, book, comment):
+    """
+    render comment to string html
+    :param request:
+    :param book:
+    :param comment:
+    :return:
+    """
+    cmt_html = render_to_string('comment-item.html',
+                                context={'comment': comment},
+                                request=request)
+    return cmt_html
+
+
 def check_is_comment_user(request, comment):
     """
     检查当前请求者是否为comment的user
@@ -88,4 +105,9 @@ def check_is_comment_user(request, comment):
     """
     if request.user != comment.user:
         raise Http404
+
+
+
+
+
 

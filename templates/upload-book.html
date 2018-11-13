@@ -13,6 +13,12 @@
                     <input type="file" class="form-control-file {% if 'cover_picture' in invalid_keys %}is-invalid{% endif %}" id="id_cover_picture" required name="cover_picture">
                 </div>
               </div>
+                <div class="form-group row">
+                <label for="id_pdf" class="col-sm-1 col-form-label">PDF</label>
+                <div class="col-sm-11">
+                    <input type="file" class="form-control-file {% if 'pdf' in invalid_keys %}is-invalid{% endif %}" id="id_pdf" required name="pdf">
+                </div>
+              </div>
 
               <div class="form-group row">
                 <label for="id_name" class="col-sm-1 col-form-label">书名</label>

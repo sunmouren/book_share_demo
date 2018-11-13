@@ -4,7 +4,7 @@
 
 {% block main %}
     <div class="container">
-       <div class="my-3 p-3 bg-white rounded box-shadow">
+       <div class="my-3 p-3 bg-white rounded box-shadow" style="background-image: url(/media/image/userbg.jpg)">
             <div class="media text-muted pt-3">
                 <a href="{{ user.avatar.url }}">
                     <img src="{{ user.avatar.url }}" alt="" class="mr-2 rounded" style="width: 32px; height: 32px">
@@ -37,14 +37,14 @@
 
         <div class="nav-scroller bg-white box-shadow">
             <nav class="nav nav-underline container" >
-               <a class="nav-link {% ifequal 'books' data %}active text-success{% endifequal %}" href="?data=books">图书</a>
-               <a class="nav-link {% ifequal 'comments' data %}active text-success{% endifequal %}" href="?data=comments">书评</a>
-               <a class="nav-link {% ifequal 'followings' data %}active text-success{% endifequal %}" href="?data=followings">关注</a>
-               <a class="nav-link {% ifequal 'followers' data %}active text-success{% endifequal %}" href="?data=followers">粉丝</a>
-               <a class="nav-link" href="#">历史</a>
-               <a class="nav-link" href="#">传记</a>
-               <a class="nav-link" href="#">Link</a>
-               <a class="nav-link" href="#">Link</a>
+               <a class="nav-link {% ifequal 'books' data %}active text-success{% endifequal %}" href="?data=books">
+                   <i class="fa fa-book" aria-hidden="true"></i> 图书</a>
+               <a class="nav-link {% ifequal 'comments' data %}active text-success{% endifequal %}" href="?data=comments">
+                   <i class="fa fa-comments-o" aria-hidden="true"></i> 书评</a>
+               <a class="nav-link {% ifequal 'followings' data %}active text-success{% endifequal %}" href="?data=followings">
+                   <i class="fa fa-user-plus" aria-hidden="true"></i> 关注</a>
+               <a class="nav-link {% ifequal 'followers' data %}active text-success{% endifequal %}" href="?data=followers">
+                   <i class="fa fa-user-o" aria-hidden="true"></i> 粉丝</a>
             </nav>
         </div>
 
@@ -53,7 +53,7 @@
             <div class="my-3 p-3 bg-white rounded box-shadow">
                 <h6 class="border-bottom border-gray pb-2 mb-3">{{ info }}上传的图书</h6>
                 <div class="row mb-2">
-                {% for book in books %}
+                {% for book in objects %}
                     <div class="col-md-4" id="bok-{{ book.id }}">
                       <div class="card mb-4 box-shadow">
                           <a href="{{ book.get_absolute_url }}">
@@ -63,28 +63,13 @@
                               <h5 class="card-title"><a href="{{ book.get_absolute_url }}">{{ book.name }}</a></h5>
                               <div class="d-flex justify-content-between align-items-center">
                                   <div class="btn-group">
-                                      <a type="button" class="btn btn-sm bg-light text-info"
-                                              data-toggle="collapse" data-target="#CommentForm{{ book.id }}" aria-expanded="false"
-                                              aria-controls="CommentForm{{ book.id }}">写书评</a>
-
 
                                       {% ifequal request.user user %}
                                            <a href="{% url 'books:edit_book' book.id %}" type="button" class="btn btn-sm bg-light text-info">编辑</a>
                                            <a type="button" class="btn btn-sm bg-light text-info">删除</a>
-                                      {% else %}
-                                          <a type="button" class="btn btn-sm bg-light text-info">下载</a>
                                       {% endifequal %}
                                   </div>
                                 <small class="text-muted">{{ book.created|date:'Y-m-d' }}</small>
-                              </div>
-                              <div class="collapse" id="CommentForm{{ book.id }}" style="margin-top: 8px">
-                                     <form>
-                                        <div class="form-group">
-                                          <textarea class="form-control" id="message-text-{{ book.id }}"></textarea>
-                                        </div>
-                                     </form>
-                                  <button type="button" class="btn btn-sm btn-outline-secondary" data-dismiss="collapse" onclick="cancelComment({{ book.id }})">取 消</button>
-                                  <button type="button" class="btn btn-sm btn-success float-right" onclick="submitComment({{ book.id }}, 0)">发 送</button>
                               </div>
                           </div>
                       </div>
@@ -116,9 +101,12 @@
         {% ifequal 'comments' data %}
              <div class="my-3 p-3 bg-white rounded box-shadow">
                  <h6 class="border-bottom border-gray pb-2 mb-0">{{ info }}的书评</h6>
-
-                 {% include 'comment-list-base.html' %}
-
+                 <div id="comment-list">
+                     {% for comment in objects %}
+                        {% include 'comment-public-item.html' %}
+                     {% endfor %}
+                 </div>
+                <!-- fake comments -->
                 <div class="media text-muted pt-3">
                   <img data-src="holder.js/32x32?theme=thumb&bg=007bff&fg=007bff&size=1" alt="" class="mr-2 rounded">
                   <p class="media-body pb-3 mb-0 small lh-125 border-bottom border-gray">
@@ -149,11 +137,11 @@
         {% ifequal 'followings' data %}
             <div class="my-3 p-3 bg-white rounded box-shadow">
                 <h6 class="border-bottom border-gray pb-2 mb-0">{{ info }}的关注</h6>
-                {% for user in followings %}
+                {% for user in objects %}
                     {% check_is_following_user request user as is_following%}
                     <div class="media text-muted pt-3">
                       <a href="{{ user.get_absolute_url }}">
-                          <img src="{{ user.avatar.url }}" alt="" class="mr-2 rounded" style="width: 32px; height: 32px;">
+                          <img src="{{ MEDIA_URL }}{{ user.avatar.url }}" alt="" class="mr-2 rounded" style="width: 32px; height: 32px;">
                       </a>
 
                       <div class="media-body pb-3 mb-0 small lh-125 border-bottom border-gray">
@@ -177,6 +165,7 @@
                     </div>
                 {% endfor %}
 
+                <!-- fake data -->
                 <div class="media text-muted pt-3">
                   <img data-src="holder.js/32x32?theme=thumb&bg=007bff&fg=007bff&size=1" alt="" class="mr-2 rounded">
                   <div class="media-body pb-3 mb-0 small lh-125 border-bottom border-gray">
@@ -217,7 +206,7 @@
         {% ifequal 'followers' data %}
             <div class="my-3 p-3 bg-white rounded box-shadow">
                 <h6 class="border-bottom border-gray pb-2 mb-0">{{ info }}的粉丝</h6>
-                {% for user in followers %}
+                {% for user in objects %}
                     {% check_is_following_user request user as is_following%}
                     <div class="media text-muted pt-3">
                       <a href="{{ user.get_absolute_url }}">
@@ -244,7 +233,7 @@
                       </div>
                     </div>
                 {% endfor %}
-
+                <!-- fake data -->
                 <div class="media text-muted pt-3">
                   <img data-src="holder.js/32x32?theme=thumb&bg=007bff&fg=007bff&size=1" alt="" class="mr-2 rounded">
                   <div class="media-body pb-3 mb-0 small lh-125 border-bottom border-gray">

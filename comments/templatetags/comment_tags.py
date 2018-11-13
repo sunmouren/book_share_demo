@@ -31,7 +31,7 @@ def get_hot_comments():
 
 
 @register.simple_tag
-def check_is_liked_comment(request, comment):
+def check_is_liked(request, comment):
     """
     检查当前用户是否在喜欢书评列表中
     :param request:

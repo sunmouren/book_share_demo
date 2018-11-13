@@ -18,7 +18,11 @@
 
             {% get_hot_comments as comments %}
 
-            {% include 'comment-list-base.html' %}
+
+            {% for comment in comments %}
+                {% include 'comment-public-item.html' %}
+            {% endfor %}
+
 
             <div class="media text-muted pt-3">
               <img data-src="holder.js/32x32?theme=thumb&bg=007bff&fg=007bff&size=1" alt="" class="mr-2 rounded">

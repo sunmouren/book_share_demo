@@ -32,10 +32,11 @@ class UploadBookView(LoginRequiredMixin, View):
                 return HttpResponseRedirect(reverse('users:user_profile', args=[request.user.id]))
             except BaseException as e:
                 print('upload error {0}'.format(e))
-
+        categories = Category.objects.all()
         invalid_keys = [key for key in upload_form.errors]
         return render(request, 'upload-book.html', {
             'upload_form': upload_form,
+            'categories': categories,
             'invalid_keys': invalid_keys,
             'status': 'ko',
         })

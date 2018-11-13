@@ -110,33 +110,30 @@ class UserProfileView(View):
     def get(self, request, user_id):
         user = get_object_or_404(UserProfile, id=int(user_id))
         info = '我' if request.user == user else 'TA'
+        # 根据data获取相应的用户data模块, 默认为 ’books'
         data = request.GET.get('data', 'books')
-        books = self.get_books(user, data)
-        comments = self.get_comments(user, data)
-        followings = self.get_followings(user, data)
-        followers = self.get_followers(user, data)
+        objects = self.get_objects(user=user, data=data)
 
         return render(request, 'user-profile.html', {
             'user': user,
-            'books': books,
-            'comments': comments,
-            'followings': followings,
-            'followers': followers,
+            'objects': objects,
             'info': info,
             'data': data,
         })
 
-    def get_books(self, user, data):
-        return user.upload_books.all() if data == 'books' else []
-
-    def get_comments(self, user, data):
-        return user.book_comments.all() if data == 'comments' else []
-
-    def get_followings(self, user, data):
-        return user.following_users.all() if data == 'followings' else []
-
-    def get_followers(self, user, data):
-        return user.follower_users.all() if data == 'followers' else []
+    @staticmethod
+    def get_objects(user, data):
+        if 'books' == data:
+            objects = user.get_books
+        elif 'comments' == data:
+            objects = user.get_comments
+        elif 'followings' == data:
+            objects = user.get_followings
+        elif 'followers' == data:
+            objects = user.get_followers
+        else:
+            objects = []
+        return objects
 
 
 class UserListView(View):

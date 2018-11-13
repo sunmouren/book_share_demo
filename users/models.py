@@ -23,10 +23,23 @@ class UserProfile(AbstractUser):
         verbose_name_plural = verbose_name
 
     def get_absolute_url(self):
-        """
-        :return: 用户绝对路径
-        """
         return reverse('users:user_profile', args=[self.id])
+
+    @property
+    def get_books(self):
+        return self.upload_books.all()
+
+    @property
+    def get_comments(self):
+        return self.book_comments.all()
+
+    @property
+    def get_followings(self):
+        return self.following_users.all()
+
+    @property
+    def get_followers(self):
+        return self.follower_users.all()
 
     def __str__(self):
         if self.nickname:

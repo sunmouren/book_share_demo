@@ -4,6 +4,7 @@
 
 {% block main %}
     <div class="container">
+
         <div class="my-3 p-3 bg-white rounded box-shadow">
             <div class="row">
                 <div class="col-md-2">
@@ -26,90 +27,57 @@
                               {{ book.desc }}
                           </div>
                       </div>
+                        <div class="p-1"> <span class="text-danger">上传者:</span> <a href="{{ book.upload_user.get_absolute_url }}"><span class="ml-2 text-success">{{ book.upload_user }}</span></a> </div>
+
                         <!--小屏幕显示模块结束-->
                     </div>
                 </div>
             </div>
         </div>
+
         <div class="nav-scroller bg-white box-shadow" id="recent">
             <nav class="nav nav-underline container" >
-               <a class="nav-link {% ifequal 'recent' data %}active text-success{% endifequal %}" href="?data=recent">最新书评</a>
-               <a class="nav-link {% ifequal 'hot' data %}active text-success{% endifequal %}" href="?data=hot">精彩书评</a>
-               <a class="nav-link" href="#comment-form" data-toggle="collapse" aria-expanded="false" aria-controls="comment-form">写书评</a>
-               <a class="nav-link" href="#">下载电子书</a>
+                <a class="nav-link" href="#comment-form-0" data-toggle="collapse" aria-expanded="false" aria-controls="comment-form">
+                   <i class="fa fa-pencil-square-o" aria-hidden="true"></i> 写书评</a>
+               <a class="nav-link {% ifequal 'recent' data %}active text-success{% endifequal %}" href="?data=recent">
+                   <i class="fa fa-comment-o" aria-hidden="true"></i> 最新书评</a>
+               <a class="nav-link {% ifequal 'hot' data %}active text-success{% endifequal %}" href="?data=hot">
+                   <i class="fa fa-comments-o" aria-hidden="true"></i> 热门书评</a>
+
+               <a class="nav-link" href="{% url 'books:preview_pdf' book.id %}"><i class="fa fa-eye" aria-hidden="true"></i> 预览</a>
+                {% if request.user.is_authenticated %}
+                     <a class="nav-link" href="{{ book.pdf.url }}" target="_blank" download="" data-id="274" title="">
+                         <i class="fa fa-download" aria-hidden="true"></i> 下载</a>
+                {% else %}
+                     <a class="nav-link" href="{% url 'users:user_login' %}"><i class="fa fa-sign-in" aria-hidden="true"></i> 登录（下载）</a>
+                {% endif %}
             </nav>
         </div>
 
         <!-- comment form -->
-        <div class="my-3 p-3 bg-white rounded box-shadow collapse" id="comment-form">
+        <div class="my-3 p-3 bg-white rounded box-shadow collapse clearfix" id="comment-form-0">
             <form>
                 <div class="form-group">
-                    <textarea class="form-control" id="message-text-{{ book.id }}" data-login="{% if not request.user.is_authenticated %}un{% endif %}login" placeholder="写下你的书评..."></textarea>
+                    <textarea class="form-control" id="message-text-0" data-login="{% if not request.user.is_authenticated %}un{% endif %}login" placeholder="写下你的评论..."></textarea>
                 </div>
-                <button type="button" class="btn btn-sm btn-success" onclick="submitComment({{ book.id }}, 0)">发 送</button>
+                <button type="button" class="btn btn-sm btn-outline-success float-right " onclick="submitComment({{ book.id }}, 0)">发 送</button>
+                <button type="button" class="btn btn-sm btn-outline-secondary float-right mr-3" href="#comment-form-0" data-toggle="collapse" aria-expanded="false" aria-controls="comment-form">取消</button>
             </form>
         </div>
 
         <!-- book recent comments data-->
          <div class="my-3 p-3 bg-white rounded box-shadow">
-             <h6 class="border-bottom border-gray pb-2 mb-0">
-                {{ info }}书评({{ comment_count }})
+             <h6 class="border-bottom border-gray pb-2 mb-0" id="comment-info">
+                {{ info }}书评(<span id="comment-count">{{ comment_count }}</span>)
              </h6>
 
-             {% for comment in comments %}
-                 {% check_is_liked_comment request comment as is_liked %}
-                <div class=" media text-muted pt-3" id="comment-{{ comment.id }}">
-                    <a href="{{ comment.user.get_absolute_url }}">
-                        <img src="{{ comment.user.avatar.url }}" alt="" class="mr-2 rounded" style="width: 32px; height: 32px;">
-                    </a>
-                    <div class="media-body pb-3 mb-0 small lh-125 border-bottom border-gray">
-                        <strong class="d-block text-gray-dark">
-                            {{ comment.user }} <span><small>{{ comment.created }}</small></span>
-                        </strong>
-                        <p class="mt-1 mb-0">{{ comment.content }}</p>
-                        <p class="mt-1 mb-0">
-                            <a class="{% if is_liked %}text-danger{% else %}text-info{% endif %}" id="like-comment-{{ comment.id }}"
-                               data-login="{% if not request.user.is_authenticated %}un{% endif %}login"
-                               data-action="{% if is_liked %}un{% endif %}like" onclick="SubmitLike({{ comment.id }})">
-                                <i class="fa fa-thumbs-o-up"></i>
-                                <span id="like-count-{{ comment.id }}">{{ comment.like_number }}</span>
-                            </a>
-                            <a class="ml-2 text-info" data-toggle="collapse" href="#CommentForm{{ comment.id }}" aria-expanded="false"
-                               aria-controls="CommentForm{{ comment.id }}">
-                                <i class="fa fa-comment-o"></i>
-                                <small>回复</small>
-                            </a>
-                             {% ifequal request.user comment.user %}
-                                 <a class="ml-2 text-info" onclick="deleteComment({{ comment.id }})" data-toggle="tooltip" data-placement="top" title="确定删除吗？">
-                                    <i class="fa fa-trash-o"></i>
-                                    <small>删除</small>
-                                 </a>
-                             {% endifequal %}
+             <div id="comment-list">
+                {% for comment in comments %}
+                    {% include 'comment-item.html' %}
+                {% endfor %}
+            </div>
 
-                        </p>
-                        <!--父级书评-->
-                        {% if comment.parent %}
-                            <p class="mt-1 mb-0 p-1 border border-secondary border-bottom-0 border-top-0 border-right-0">
-                                <a href="{{ comment.parent.user.get_absolute_url }}">@{{ comment.parent.user }}: </a>
-                                <small>{{ comment.parent.content }}</small>
-                            </p>
-                        {% endif %}
-                        <!--回复表单-->
-                        <div class="collapse mt-3 mb-0" id="CommentForm{{ comment.id }}" >
-                            <form>
-                            <div class="form-group">
-                                <textarea class="form-control" id="message-text-{{ comment.id }}"
-                                data-login="{% if not request.user.is_authenticated %}un{% endif %}login"></textarea>
-                            </div>
-                            </form>
-                            <button type="button" class="btn btn-sm btn-success float-left" onclick="submitReply({{ book.id }}, {{ comment.id }})">发 送</button>
-                        </div>
-                    </div>
-
-                </div>
-            {% endfor %}
-
-
+            <!-- fake comment -->
             <div class="media text-muted pt-3">
               <img data-src="holder.js/32x32?theme=thumb&bg=007bff&fg=007bff&size=1" alt="" class="mr-2 rounded">
               <p class="media-body pb-3 mb-0 small lh-125 border-bottom border-gray">
@@ -124,7 +92,6 @@
                 Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus.
               </p>
             </div>
-
             <div class="media text-muted pt-3">
               <img data-src="holder.js/32x32?theme=thumb&bg=6f42c1&fg=6f42c1&size=1" alt="" class="mr-2 rounded">
               <p class="media-body pb-3 mb-0 small lh-125 border-bottom border-gray">

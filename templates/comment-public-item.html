@@ -1,0 +1,57 @@
+{% load comment_tags %}
+
+    {% check_is_liked request comment as is_liked %}
+     <div class=" media text-muted pt-3" id="comment-{{ comment.id }}">
+        <a href="{{ comment.user.get_absolute_url }}">
+            <img src="{{ comment.user.avatar.url }}" alt="" class="mr-2 rounded" style="width: 32px; height: 32px;">
+        </a>
+        <div class="media-body pb-3 mb-0 small lh-125 border-bottom border-gray">
+            <strong class="d-block text-gray-dark">
+                {{ comment.user }} <span><small>{{ comment.created }}</small></span>
+            </strong>
+            <blockquote class="blockquote mb-0">
+                <p class="mb-0 small"><small>{{ comment.content }}</small></p>
+                <footer class="blockquote-footer"><small>来自 </small> <cite title="Source Title">
+                    <small><a href="{{ comment.book.get_absolute_url }}">{{ comment.book.name }}</a></small></cite>
+                </footer>
+            </blockquote>
+            <p class="mt-1 mb-0">
+                <a class="{% if is_liked %}text-danger{% else %}text-info{% endif %}" id="like-comment-{{ comment.id }}"
+                   data-login="{% if not request.user.is_authenticated %}un{% endif %}login"
+                   data-action="{% if is_liked %}un{% endif %}like" onclick="SubmitLike({{ comment.id }})">
+                    <i class="fa fa-thumbs-o-up"></i>
+                    <span id="like-count-{{ comment.id }}">{{ comment.like_number }}</span>
+                </a>
+                <a class="ml-2 text-info" data-toggle="collapse" href="#comment-form-{{ comment.id }}" aria-expanded="false"
+                   aria-controls="comment-form-{{ comment.id }}">
+                    <i class="fa fa-comment-o"></i>
+                    <small>回复</small>
+                </a>
+                 {% ifequal request.user comment.user %}
+                     <a class="ml-2 text-info" onclick="deleteComment({{ comment.id }})" data-toggle="tooltip" data-placement="top" title="确定删除吗？">
+                        <i class="fa fa-trash-o"></i>
+                        <small>删除</small>
+                     </a>
+                 {% endifequal %}
+
+            </p>
+            <!--父级书评-->
+            {% if comment.parent %}
+                <p class="mt-1 mb-0 p-1 border border-secondary border-bottom-0 border-top-0 border-right-0">
+                    <a href="{{ comment.parent.user.get_absolute_url }}">@{{ comment.parent.user }}: </a>
+                    <small>{{ comment.parent.content }}</small>
+                </p>
+            {% endif %}
+            <!--回复表单-->
+            <div class="collapse mt-3 mb-0" id="comment-form-{{ comment.id }}" >
+                <form>
+                <div class="form-group">
+                    <textarea class="form-control" id="message-text-{{ comment.id }}"
+                    data-login="{% if not request.user.is_authenticated %}un{% endif %}login"></textarea>
+                </div>
+                </form>
+                <button type="button" class="btn btn-sm btn-outline-success float-right " onclick="submitComment({{ comment.book.id }}, {{ comment.id }})">发 送</button>
+                <button type="button" class="btn btn-sm btn-outline-secondary float-right mr-3" href="#comment-form-{{ comment.id }}" data-toggle="collapse" aria-expanded="false" aria-controls="comment-form">取消</button>
+            </div>
+        </div>
+     </div>

@@ -54,21 +54,7 @@
                           <div class="card-body">
                               <h5 class="card-title"><a href="{{ book.get_absolute_url }}">{{ book.name }}</a></h5>
                               <div class="d-flex justify-content-between align-items-center">
-                                  <div class="btn-group">
-                                      <a type="button" class="btn btn-sm bg-light text-info"
-                                      data-toggle="collapse" data-target="#CommentForm{{ book.id }}" aria-expanded="false" aria-controls="CommentForm{{ book.id }}">写书评</a>
-                                      <a type="button" class="btn btn-sm bg-light text-info">下载电子书</a>
-                                  </div>
                                 <small class="text-muted">{{ book.created|timesince }}前</small>
-                              </div>
-                              <div class="collapse mt-2" id="CommentForm{{ book.id }}" >
-                                  <form>
-                                        <div class="form-group">
-                                          <textarea class="form-control" id="message-text-{{ book.id }}"></textarea>
-                                        </div>
-                                      </form>
-                                  <button type="button" class="btn btn-sm btn-outline-secondary" data-dismiss="collapse" onclick="cancelComment({{ book.id }})">取 消</button>
-                                  <button type="button" class="btn btn-sm btn-success float-right" onclick="submitComment({{ book.id }}, 0)">发 送</button>
                               </div>
                           </div>
                       </div>
@@ -89,10 +75,10 @@
                         <div class="card-body">
                             <h5 class="card-title"><a href="#">book-name-{{ fake_book }}</a></h5>
                             <div class="d-flex justify-content-between align-items-center">
-                                <div class="btn-group">
-                                    <button type="button" class="btn btn-sm btn-outline-secondary">写书评</button>
-                                    <button type="button" class="btn btn-sm btn-outline-secondary">下载</button>
-                                </div>
+{#                                <div class="btn-group">#}
+{#                                    <button type="button" class="btn btn-sm btn-outline-secondary">写书评</button>#}
+{#                                    <button type="button" class="btn btn-sm btn-outline-secondary">下载</button>#}
+{#                                </div>#}
                                 <small class="text-muted">{{ fake_book }} 分钟前</small>
                             </div>
                         </div>
