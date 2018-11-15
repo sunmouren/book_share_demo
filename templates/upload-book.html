@@ -1,5 +1,11 @@
 {% extends "base.html" %}
 
+{% load staticfiles %}
+
+{% block css %}
+    <link href="{% static 'css/fileinput.min.css' %}" rel="stylesheet">
+{% endblock %}
+
 {% block main %}
     <div class="container">
         <div class="my-3 p-3 bg-white rounded box-shadow">
@@ -10,13 +16,20 @@
               <div class="form-group row">
                 <label for="id_cover_picture" class="col-sm-1 col-form-label">封面图</label>
                 <div class="col-sm-11">
-                    <input type="file" class="form-control-file {% if 'cover_picture' in invalid_keys %}is-invalid{% endif %}" id="id_cover_picture" required name="cover_picture">
+                    <input type="file"
+                           class="form-control-file {% if 'cover_picture' in invalid_keys %}is-invalid{% endif %}"
+                           data-msg-placeholder="请选择一张图片作为图书封面"
+                           id="id_cover_picture" required name="cover_picture">
                 </div>
               </div>
                 <div class="form-group row">
                 <label for="id_pdf" class="col-sm-1 col-form-label">PDF</label>
                 <div class="col-sm-11">
-                    <input type="file" class="form-control-file {% if 'pdf' in invalid_keys %}is-invalid{% endif %}" id="id_pdf" required name="pdf">
+                    <input type="file"
+                           class="form-control-file {% if 'pdf' in invalid_keys %}is-invalid{% endif %}"
+                           data-msg-placeholder="请选择的电子书格式为PDF"
+                           id="id_pdf"
+                           required name="pdf">
                 </div>
               </div>
 
@@ -74,5 +87,20 @@
                 return true;
             });
         {% endifequal %}
+    </script>
+    <script type="text/javascript" src="{% static 'js/fileinput.min.js' %}"></script>
+    <script type="text/javascript">
+        $("#id_cover_picture").fileinput({
+            showUpload: false,
+            dropZoneEnabled: false,
+            allowedFileExtensions: ["jpg", "png", "gif"],
+
+        });
+
+        $("#id_pdf").fileinput({
+            showUpload: false,
+            dropZoneEnabled: false,
+            allowedFileExtensions: ["pdf"],
+        });
     </script>
 {% endblock %}

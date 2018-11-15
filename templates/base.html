@@ -39,9 +39,9 @@
               </li>
 
             {% if request.user.is_authenticated %}
-                <li class="nav-item">
-                    <a class="nav-link" href="#">关注</a>
-                </li>
+{#                <li class="nav-item">#}
+{#                    <a class="nav-link" href="#">关注</a>#}
+{#                </li>#}
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="http://example.com" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         <img src="{{ request.user.avatar.url }}" alt="" class="mr-2 rounded" style="width: 20px; height: 20px;">
