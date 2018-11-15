@@ -1,56 +1,83 @@
 {% extends "base.html" %}
 
+{% load staticfiles %}
+
+{% block css %}
+    <link href="{% static 'css/fileinput.min.css' %}" rel="stylesheet">
+    <style>
+        .kv-avatar .krajee-default.file-preview-frame,.kv-avatar .krajee-default.file-preview-frame:hover {
+            margin: 0;
+            padding: 0;
+            border: none;
+            box-shadow: none;
+            text-align: center;
+        }
+        .kv-avatar {
+            display: inline-block;
+        }
+        .kv-avatar .file-input {
+            display: table-cell;
+            width: 213px;
+        }
+        .kv-reqd {
+            color: red;
+            font-family: monospace;
+            font-weight: normal;
+        }
+    </style>
+{% endblock %}
+
 {% block main %}
+
     <div class="container">
-        <div class="my-3 p-3 bg-white rounded box-shadow">
-         <h6 class="border-bottom border-gray pb-2 mb-3">
-             <a href="{{ user.get_absolute_url }}"><i class="fa fa-reply" aria-hidden="true"></i> 主页</a>-编辑资料</h6>
-            <div class="form-group row">
-                <label for="id_avatar" class="col-sm-1 col-form-label">旧头像</label>
-                <div class="col-sm-11">
-                    <img src="{{ user.avatar.url }}" alt="" class="mr-2 rounded float-right" style="width: 32px; height: 32px">
+        <h6 class="border-bottom border-gray  my-3 pb-2 mb-3"><a href="{{ user.get_absolute_url }}"><i class="fa fa-reply" aria-hidden="true"></i> 主页</a>-编辑资料</h6>
+        <form class="form form-vertical" action="{% url 'users:modify_profile' user.id %}" method="post" enctype="multipart/form-data">
+            <div class="row">
+                <div class="col-sm-4 text-center">
+                    <div class="kv-avatar">
+                        <div class="file-loading">
+                            <input id="id_avatar" name="avatar" type="file">
+                        </div>
+                    </div>
+                    <div class="kv-avatar-hint"><small>Select file < 1500 KB</small></div>
+                </div>
+                <div class="col-sm-8">
+                  <div class="row">
+                    <div class="col-sm-12">
+                      <div class="form-group">
+                        <label for="id_nickname">昵 称</label>
+                        <input type="text" class="form-control {% if 'nickname' in invalid_keys %}is-invalid{% endif %}" id="id_nickname" name="nickname" value="{{ user.nickname }}">
+                      </div>
+                    </div>
+                    <div class="col-sm-12">
+                      <div class="form-group">
+                        <label for="id_signature">个性签名</label>
+                        <input type="text" class="form-control {% if 'signature' in invalid_keys %}is-invalid{% endif %}" id="id_signature" name="signature" value="{{ user.signature }}">
+                      </div>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <hr>
+                    <div class="text-right">
+                        {% csrf_token %}
+                      <button type="submit" class="btn btn-success">保存修改</button>
+                    </div>
+                  </div>
                 </div>
             </div>
-            <form method="post" enctype="multipart/form-data" action="{% url 'users:modify_profile' user.id %}">
-                {% csrf_token %}
-              <div class="form-group row">
-                <label for="id_avatar" class="col-sm-1 col-form-label">新头像</label>
-                <div class="col-sm-11 d-flex flex-column">
-                    <input type="file" class="form-control-file {% if 'avatar' in invalid_keys %}is-invalid{% endif %}" id="id_avatar" required name="avatar">
-                </div>
-              </div>
+        </form>
+        <div id="kv-avatar-errors-1" class="center-block" style="width:800px;display:none"></div>
 
-              <div class="form-group row">
-                <label for="id_nickname" class="col-sm-1 col-form-label">昵称</label>
-                <div class="col-sm-11">
-                  <input type="text" class="form-control {% if 'nickname' in invalid_keys %}is-invalid{% endif %}" id="id_nickname" name="nickname" value="{{ user.nickname }}">
-                </div>
-              </div>
-              <div class="form-group row">
-                <label for="id_signature" class="col-sm-1 col-form-label">座右铭</label>
-                <div class="col-sm-11">
-                  <input type="text" class="form-control {% if 'signature' in invalid_keys %}is-invalid{% endif %}" id="id_signature" name="signature" value="{{ user.signature }}">
-                </div>
-              </div>
-
-              <div class="form-group row ">
-                <div class="col-sm-12 mt-3">
-                  <button type="submit" class="btn btn-success">保存修改</button>
-                </div>
-              </div>
-            </form>
-
-            {% if modify_from.errors.items %}
-               <div class="alert alert-danger alert-dismissible fade show mt-2" role="alert">
-                    {% for key, error in modify_from.errors.items %}
-                        {{ error }}
-                    {% endfor %}
-                  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                  </button>
-                </div>
-           {% endif %}
+        {% if modify_from.errors.items %}
+        <div class="alert alert-danger alert-dismissible fade show mt-2" role="alert">
+            {% for key, error in modify_from.errors.items %}
+                {{ error }}
+            {% endfor %}
+          <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
         </div>
+        {% endif %}
     </div>
 {% endblock %}
 
@@ -62,5 +89,24 @@
                 return true;
             });
         {% endifequal %}
+    </script>
+    <script type="text/javascript" src="{% static 'js/fileinput.min.js' %}"></script>
+    <script type="text/javascript">
+        $("#id_avatar").fileinput({
+            overwriteInitial: true,
+            maxFileSize: 1500,
+            showClose: false,
+            showCaption: false,
+            browseLabel: '',
+            removeLabel: '',
+            browseIcon: '<i class="fa fa-picture-o" aria-hidden="true"></i>',
+            removeIcon: '<i class="fa fa-trash-o" aria-hidden="true"></i>',
+            removeTitle: 'Cancel or reset changes',
+            elErrorContainer: '#kv-avatar-errors-1',
+            msgErrorClass: 'alert alert-block alert-danger',
+            defaultPreviewContent: '<img class="file-preview" src="{{ user.avatar.url }}" alt="Your Avatar">',
+            layoutTemplates: {main2: '{preview}' + ' {remove} {browse}'},
+            allowedFileExtensions: ["jpg", "png", "gif"]
+        });
     </script>
 {% endblock %}

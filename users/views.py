@@ -187,6 +187,7 @@ class ModifyUserProfileView(LoginRequiredMixin, View):
         if modify_form.is_valid():
             modify_form.save()
             return render(request, 'modify-user-profile.html', {
+                'user': user,
                 'status': 'ok',
             })
         else:
